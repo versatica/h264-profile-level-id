@@ -51,9 +51,10 @@ import {
 Class containint both H264 Profile and Level.
 
 ```js
-const profile_level_id = new ProfileLevelId(profile, level);
+const profile_level_id = new ProfileLevelId(ProfileMain, Level3_1);
 
 console.log('profile:%d, level:%d', profile_level_id.profile, profile_level_id.level);
+// => profile:3, level:31
 ```
 
 Both `profile` and `level` members are public.
