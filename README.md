@@ -48,7 +48,7 @@ import {
 
 ### ProfileLevelId
 
-Class containint both H264 Profile and Level.
+Class containing both H264 Profile and Level.
 
 ```js
 const profile_level_id = new ProfileLevelId(ProfileMain, Level3_1);
