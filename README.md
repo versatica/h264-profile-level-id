@@ -51,9 +51,9 @@ import {
 Class containint both H264 Profile and Level.
 
 ```js
-const profileLevelId = new ProfileLevelId(profile, level);
+const profile_level_id = new ProfileLevelId(profile, level);
 
-console.log('profile:%d, level:%d', profileLevelId.profile, profileLevelId.level);
+console.log('profile:%d, level:%d', profile_level_id.profile, profile_level_id.level);
 ```
 
 Both `profile` and `level` members are public.
@@ -71,7 +71,7 @@ Parse profile level id that is represented as a string of 3 hex bytes. Nothing w
 
 Returns canonical string representation as three hex bytes of the profile level id, or returns nothing for invalid profile level ids.
 
-* `@param` {ProfileLevelId} **profileLevelId** - A instance of the `ProfileLevelId` class.
+* `@param` {ProfileLevelId} **profile_level_id** - A instance of the `ProfileLevelId` class.
 * `@returns` {String}
 
 
