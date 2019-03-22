@@ -1,3 +1,9 @@
+const debug = require('debug')('h264-profile-level-id');
+
+/* eslint-disable no-console */
+debug.log = console.info.bind(console);
+/* eslint-enable no-console */
+
 const ProfileConstrainedBaseline = 1;
 const ProfileBaseline = 2;
 const ProfileMain = 3;
@@ -147,8 +153,10 @@ exports.parseProfileLevelId = function(str)
 	switch (level_idc)
 	{
 		case Level1_1:
+		{
 			level = (profile_iop & ConstraintSet3Flag) !== 0 ? Level1_b : Level1_1;
 			break;
+		}
 		case Level1:
 		case Level1_2:
 		case Level1_3:
@@ -164,11 +172,17 @@ exports.parseProfileLevelId = function(str)
 		case Level5:
 		case Level5_1:
 		case Level5_2:
+		{
 			level = level_idc;
 			break;
+		}
 		// Unrecognized level_idc.
 		default:
+		{
+			debug('parseProfileLevelId() | unrecognized level_idc:%s', level_idc);
+
 			return null;
+		}
 	}
 
 	// Parse profile_idc/profile_iop into a Profile enum.
@@ -183,7 +197,8 @@ exports.parseProfileLevelId = function(str)
 		}
 	}
 
-	// Unrecognized profile_idc/profile_iop combination.
+	debug('parseProfileLevelId() | unrecognized profile_idc/profile_iop combination');
+
 	return null;
 };
 
@@ -203,14 +218,26 @@ exports.profileLevelIdToString = function(profile_level_id)
 		switch (profile_level_id.profile)
 		{
 			case ProfileConstrainedBaseline:
+			{
 				return '42f00b';
+			}
 			case ProfileBaseline:
+			{
 				return '42100b';
+			}
 			case ProfileMain:
+			{
 				return '4d100b';
+			}
 			// Level 1_b is not allowed for other profiles.
 			default:
+			{
+				debug(
+					'profileLevelIdToString() | Level 1_b not is allowed for profile:%s',
+					profile_level_id.profile);
+
 				return null;
+			}
 		}
 	}
 
@@ -219,23 +246,38 @@ exports.profileLevelIdToString = function(profile_level_id)
 	switch (profile_level_id.profile)
 	{
 		case ProfileConstrainedBaseline:
+		{
 			profile_idc_iop_string = '42e0';
 			break;
+		}
 		case ProfileBaseline:
+		{
 			profile_idc_iop_string = '4200';
 			break;
+		}
 		case ProfileMain:
+		{
 			profile_idc_iop_string = '4d00';
 			break;
+		}
 		case ProfileConstrainedHigh:
+		{
 			profile_idc_iop_string = '640c';
 			break;
+		}
 		case ProfileHigh:
+		{
 			profile_idc_iop_string = '6400';
 			break;
-		// Unrecognized profile.
+		}
 		default:
+		{
+			debug(
+				'profileLevelIdToString() | unrecognized profile:%s',
+				profile_level_id.profile);
+
 			return null;
+		}
 	}
 
 	let levelStr = (profile_level_id.level).toString(16);
@@ -318,14 +360,16 @@ exports.generateProfileLevelIdForAnswer = function(
 	remote_offered_params = {}
 )
 {
-	// If both local and remote have zero profile-level-id values, they are both
-	// using the default profile. In this case, don't return anything.
-	// either.
+	// If both local and remote params do not contain profile-level-id, they are
+	// both using the default profile. In this case, don't return anything.
 	if (
 		!local_supported_params['profile-level-id'] &&
 		!remote_offered_params['profile-level-id']
 	)
 	{
+		debug(
+			'generateProfileLevelIdForAnswer() | no profile-level-id in local and remote params');
+
 		return null;
 	}
 
@@ -359,6 +403,10 @@ exports.generateProfileLevelIdForAnswer = function(
 	// is not allowed, i.e., the level in the answer must be equal to or lower
 	// than the level in the offer.
 	const answer_level = level_asymmetry_allowed ? local_level : min_level;
+
+	debug(
+		'generateProfileLevelIdForAnswer() | result: [profile:%s, level:%s]',
+		local_profile_level_id.profile, answer_level);
 
 	// Return the resulting profile-level-id for the answer parameters.
 	return exports.profileLevelIdToString(
