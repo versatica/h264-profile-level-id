@@ -25,7 +25,8 @@ const {
 	ProfileLevelId,
 	parseProfileLevelId,
 	profileLevelIdToString,
-	parseSdpProfileLevelId
+	parseSdpProfileLevelId,
+	isSameProfile
 } = require('../');
 /* eslint-enable no-unused-vars */
 
@@ -154,8 +155,8 @@ test('TestParseSdpProfileLevelIdEmpty', () =>
 
 test('TestParseSdpProfileLevelIdConstrainedHigh', () =>
 {
-	const parameters = { 'profile-level-id': '640c2a' };
-	const profile_level_id = parseSdpProfileLevelId(parameters);
+	const params = { 'profile-level-id': '640c2a' };
+	const profile_level_id = parseSdpProfileLevelId(params);
 
 	expect(profile_level_id).toBeDefined();
 	expect(profile_level_id.profile).toBe(ProfileConstrainedHigh);
@@ -164,7 +165,36 @@ test('TestParseSdpProfileLevelIdConstrainedHigh', () =>
 
 test('TestParseSdpProfileLevelIdInvalid', () =>
 {
-	const parameters = { 'profile-level-id': 'foobar' };
+	const params = { 'profile-level-id': 'foobar' };
 
-	expect(parseSdpProfileLevelId(parameters)).toBeNull();
+	expect(parseSdpProfileLevelId(params)).toBeNull();
+});
+
+test('TestIsSameProfile', () =>
+{
+	expect(
+		isSameProfile({ foo: 'foo' }, { bar: 'bar' })
+	).toBe(true);
+	expect(
+		isSameProfile({ 'profile-level-id': '42e01f' }, { 'profile-level-id': '42C02A' })
+	).toBe(true);
+	expect(
+		isSameProfile({ 'profile-level-id': '42a01f' }, { 'profile-level-id': '58A01F' })
+	).toBe(true);
+	expect(
+		isSameProfile({ 'profile-level-id': '42e01f' }, undefined)
+	).toBe(true);
+});
+
+test('TestIsNotSameProfile', () =>
+{
+	expect(
+		isSameProfile(undefined, { 'profile-level-id': '4d001f' })
+	).toBe(false);
+	expect(
+		isSameProfile({ 'profile-level-id': '42a01f' }, { 'profile-level-id': '640c1f' })
+	).toBe(false);
+	expect(
+		isSameProfile({ 'profile-level-id': '42000a' }, { 'profile-level-id': '64002a' })
+	).toBe(false);
 });

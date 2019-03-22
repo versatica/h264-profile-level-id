@@ -252,13 +252,13 @@ exports.profileLevelIdToString = function(profile_level_id)
  * returned if the profile-level-id key is missing. Nothing will be returned if
  * the key is present but the string is invalid.
  *
- * @param {Object} parameters - Codec parameters object.
+ * @param {Object} params - Codec parameters object.
  *
  * @returns {ProfileLevelId}
  */
-exports.parseSdpProfileLevelId = function(parameters = {})
+exports.parseSdpProfileLevelId = function(params = {})
 {
-	const profile_level_id = parameters['profile-level-id'];
+	const profile_level_id = params['profile-level-id'];
 
 	return !profile_level_id
 		? DefaultProfileLevelId
@@ -333,10 +333,22 @@ exports.parseSdpProfileLevelId = function(parameters = {})
 // 	    ProfileLevelId(local_profile_level_id->profile, answer_level));
 // }
 
-// Returns true if the parameters have the same H264 profile, i.e. the same
-// H264::Profile (Baseline, High, etc).
-// bool IsSameH264Profile(const CodecParameterMap& params1,
-//                        const CodecParameterMap& params2);
+/**
+ * Returns true if the parameters have the same H264 profile, i.e. the same
+ * H264 profile (Baseline, High, etc).
+ */
+exports.isSameProfile = function(params1 = {}, params2 = {})
+{
+	const profile_level_id_1 = exports.parseSdpProfileLevelId(params1);
+	const profile_level_id_2 = exports.parseSdpProfileLevelId(params2);
+
+	// Compare H264 profiles, but not levels.
+	return Boolean(
+		profile_level_id_1 &&
+		profile_level_id_2 &&
+		profile_level_id_1.profile === profile_level_id_2.profile
+	);
+};
 
 // Convert a string of 8 characters into a byte where the positions containing
 // character c will have their bit set. For example, c = 'x', str = "x1xx0000"
