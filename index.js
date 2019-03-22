@@ -34,21 +34,33 @@ const Level =
 
 exports.Level = Level;
 
+class ProfileLevelId
+{
+	constructor(profile, level)
+	{
+		this.profile = profile;
+		this.level = level;
+	}
+}
+
+exports.ProfileLevelId = ProfileLevelId;
+
+// Default ProfileLevelId.
+//
+// TODO: The default should really be profile Baseline and level 1 according to
+// the spec: https://tools.ietf.org/html/rfc6184#section-8.1. In order to not
+// break backwards compatibility with older versions of WebRTC where external
+// codecs don't have any parameters, use profile ConstrainedBaseline level 3_1
+// instead. This workaround will only be done in an interim period to allow
+// external clients to update their code.
+//
+// http://crbug/webrtc/6337.
+const DefaultProfileLevelId =
+	new ProfileLevelId(Profile.ConstrainedBaseline, Level['3_1']);
+
 // For level_idc=11 and profile_idc=0x42, 0x4D, or 0x58, the constraint set3
 // flag specifies if level 1b or level 1.1 is used.
 const ConstraintSet3Flag = 0x10;
-
-// Convert a string of 8 characters into a byte where the positions containing
-// character c will have their bit set. For example, c = 'x', str = "x1xx0000"
-// will return 0b10110000.
-function byteMaskString(c, str)
-{
-	return (
-		((str[0] === c) << 7) | ((str[1] === c) << 6) | ((str[2] === c) << 5) |
-		((str[3] === c) << 4)	| ((str[4] === c) << 3)	| ((str[5] === c) << 2)	|
-		((str[6] === c) << 1)	| ((str[7] === c) << 0)
-	);
-}
 
 // Class for matching bit patterns such as "x1xx0000" where 'x' is allowed to be
 // either 0 or 1.
@@ -89,47 +101,6 @@ const ProfilePatterns =
 	new ProfilePattern(0x64, new BitPattern('00000000'), Profile.High),
 	new ProfilePattern(0x64, new BitPattern('00001100'), Profile.ConstrainedHigh)
 ];
-
-// Compare H264 levels and handle the level 1b case.
-function isLess(a, b)
-{
-	if (a === Level['1_b'])
-		return b !== Level['1'] && b !== Level['1_b'];
-
-	if (b === Level['1_b'])
-		return a !== Level['1'];
-
-	return a < b;
-}
-
-function min(a, b)
-{
-	return isLess(a, b) ? a : b;
-}
-
-class ProfileLevelId
-{
-	constructor(profile, level)
-	{
-		this.profile = profile;
-		this.level = level;
-	}
-}
-
-exports.ProfileLevelId = ProfileLevelId;
-
-// Default ProfileLevelId.
-//
-// TODO: The default should really be profile Baseline and level 1 according to
-// the spec: https://tools.ietf.org/html/rfc6184#section-8.1. In order to not
-// break backwards compatibility with older versions of WebRTC where external
-// codecs don't have any parameters, use profile ConstrainedBaseline level 3_1
-// instead. This workaround will only be done in an interim period to allow
-// external clients to update their code.
-//
-// http://crbug/webrtc/6337.
-const DefaultProfileLevelId =
-	new ProfileLevelId(Profile.ConstrainedBaseline, Level['3_1']);
 
 /**
  * Parse profile level id that is represented as a string of 3 hex bytes.
@@ -333,3 +304,32 @@ exports.profileLevelIdToString = function(profile_level_id)
 // H264::Profile (Baseline, High, etc).
 // bool IsSameH264Profile(const CodecParameterMap& params1,
 //                        const CodecParameterMap& params2);
+
+// Convert a string of 8 characters into a byte where the positions containing
+// character c will have their bit set. For example, c = 'x', str = "x1xx0000"
+// will return 0b10110000.
+function byteMaskString(c, str)
+{
+	return (
+		((str[0] === c) << 7) | ((str[1] === c) << 6) | ((str[2] === c) << 5) |
+		((str[3] === c) << 4)	| ((str[4] === c) << 3)	| ((str[5] === c) << 2)	|
+		((str[6] === c) << 1)	| ((str[7] === c) << 0)
+	);
+}
+
+// Compare H264 levels and handle the level 1b case.
+function isLessLevel(a, b)
+{
+	if (a === Level['1_b'])
+		return b !== Level['1'] && b !== Level['1_b'];
+
+	if (b === Level['1_b'])
+		return a !== Level['1'];
+
+	return a < b;
+}
+
+function minLevel(a, b)
+{
+	return isLessLevel(a, b) ? a : b;
+}
