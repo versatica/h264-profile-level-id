@@ -1,4 +1,3 @@
-const { toBeType } = require('jest-tobetype');
 const {
 	Profile,
 	Level,
@@ -6,8 +5,6 @@ const {
 	parseProfileLevelId,
 	profileLevelIdToString
 } = require('../');
-
-expect.extend({ toBeType });
 
 test('TestParsingInvalid', () =>
 {
