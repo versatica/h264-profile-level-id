@@ -1,38 +1,52 @@
-const Profile =
-{
-	ConstrainedBaseline : 1,
-	Baseline            : 2,
-	Main                : 3,
-	ConstrainedHigh     : 4,
-	High                : 5
-};
+const ProfileConstrainedBaseline = 1;
+const ProfileBaseline = 2;
+const ProfileMain = 3;
+const ProfileConstrainedHigh = 4;
+const ProfileHigh = 5;
 
-exports.Profile = Profile;
+exports.ProfileConstrainedBaseline = ProfileConstrainedBaseline;
+exports.ProfileBaseline = ProfileBaseline;
+exports.ProfileMain = ProfileMain;
+exports.ProfileConstrainedHigh = ProfileConstrainedHigh;
+exports.ProfileHigh = ProfileHigh;
 
 // All values are equal to ten times the level number, except level 1b which is
 // special.
-const Level =
-{
-	'1_b' : 0,
-	'1'   : 10,
-	'1_1' : 11,
-	'1_2' : 12,
-	'1_3' : 13,
-	'2'   : 20,
-	'2_1' : 21,
-	'2_2' : 22,
-	'3'   : 30,
-	'3_1' : 31,
-	'3_2' : 32,
-	'4'   : 40,
-	'4_1' : 41,
-	'4_2' : 42,
-	'5'   : 50,
-	'5_1' : 51,
-	'5_2' : 52
-};
+const Level1_b = 0;
+const Level1 = 10;
+const Level1_1 = 11;
+const Level1_2 = 12;
+const Level1_3 = 13;
+const Level2 = 20;
+const Level2_1 = 21;
+const Level2_2 = 22;
+const Level3 = 30;
+const Level3_1 = 31;
+const Level3_2 = 32;
+const Level4 = 40;
+const Level4_1 = 41;
+const Level4_2 = 42;
+const Level5 = 50;
+const Level5_1 = 51;
+const Level5_2 = 52;
 
-exports.Level = Level;
+exports.Level1_b = Level1_b;
+exports.Level1 = Level1;
+exports.Level1_1 = Level1_1;
+exports.Level1_2 = Level1_2;
+exports.Level1_3 = Level1_3;
+exports.Level2 = Level2;
+exports.Level2_1 = Level2_1;
+exports.Level2_2 = Level2_2;
+exports.Level3 = Level3;
+exports.Level3_1 = Level3_1;
+exports.Level3_2 = Level3_2;
+exports.Level4 = Level4;
+exports.Level4_1 = Level4_1;
+exports.Level4_2 = Level4_2;
+exports.Level5 = Level5;
+exports.Level5_1 = Level5_1;
+exports.Level5_2 = Level5_2;
 
 class ProfileLevelId
 {
@@ -56,7 +70,7 @@ exports.ProfileLevelId = ProfileLevelId;
 //
 // http://crbug/webrtc/6337.
 const DefaultProfileLevelId =
-	new ProfileLevelId(Profile.ConstrainedBaseline, Level['3_1']);
+	new ProfileLevelId(ProfileConstrainedBaseline, Level3_1);
 
 // For level_idc=11 and profile_idc=0x42, 0x4D, or 0x58, the constraint set3
 // flag specifies if level 1b or level 1.1 is used.
@@ -92,14 +106,14 @@ class ProfilePattern
 // This is from https://tools.ietf.org/html/rfc6184#section-8.1.
 const ProfilePatterns =
 [
-	new ProfilePattern(0x42, new BitPattern('x1xx0000'), Profile.ConstrainedBaseline),
-	new ProfilePattern(0x4D, new BitPattern('1xxx0000'), Profile.ConstrainedBaseline),
-	new ProfilePattern(0x58, new BitPattern('11xx0000'), Profile.ConstrainedBaseline),
-	new ProfilePattern(0x42, new BitPattern('x0xx0000'), Profile.Baseline),
-	new ProfilePattern(0x58, new BitPattern('10xx0000'), Profile.Baseline),
-	new ProfilePattern(0x4D, new BitPattern('0x0x0000'), Profile.Main),
-	new ProfilePattern(0x64, new BitPattern('00000000'), Profile.High),
-	new ProfilePattern(0x64, new BitPattern('00001100'), Profile.ConstrainedHigh)
+	new ProfilePattern(0x42, new BitPattern('x1xx0000'), ProfileConstrainedBaseline),
+	new ProfilePattern(0x4D, new BitPattern('1xxx0000'), ProfileConstrainedBaseline),
+	new ProfilePattern(0x58, new BitPattern('11xx0000'), ProfileConstrainedBaseline),
+	new ProfilePattern(0x42, new BitPattern('x0xx0000'), ProfileBaseline),
+	new ProfilePattern(0x58, new BitPattern('10xx0000'), ProfileBaseline),
+	new ProfilePattern(0x4D, new BitPattern('0x0x0000'), ProfileMain),
+	new ProfilePattern(0x64, new BitPattern('00000000'), ProfileHigh),
+	new ProfilePattern(0x64, new BitPattern('00001100'), ProfileConstrainedHigh)
 ];
 
 /**
@@ -132,24 +146,24 @@ exports.parseProfileLevelId = function(str)
 
 	switch (level_idc)
 	{
-		case Level['1_1']:
-			level = (profile_iop & ConstraintSet3Flag) !== 0 ? Level['1_b'] : Level['1_1'];
+		case Level1_1:
+			level = (profile_iop & ConstraintSet3Flag) !== 0 ? Level1_b : Level1_1;
 			break;
-		case Level['1']:
-		case Level['1_2']:
-		case Level['1_3']:
-		case Level['2']:
-		case Level['2_1']:
-		case Level['2_2']:
-		case Level['3']:
-		case Level['3_1']:
-		case Level['3_2']:
-		case Level['4']:
-		case Level['4_1']:
-		case Level['4_2']:
-		case Level['5']:
-		case Level['5_1']:
-		case Level['5_2']:
+		case Level1:
+		case Level1_2:
+		case Level1_3:
+		case Level2:
+		case Level2_1:
+		case Level2_2:
+		case Level3:
+		case Level3_1:
+		case Level3_2:
+		case Level4:
+		case Level4_1:
+		case Level4_2:
+		case Level5:
+		case Level5_1:
+		case Level5_2:
 			level = level_idc;
 			break;
 		// Unrecognized level_idc.
@@ -184,15 +198,15 @@ exports.parseProfileLevelId = function(str)
 exports.profileLevelIdToString = function(profile_level_id)
 {
 	// Handle special case level == 1b.
-	if (profile_level_id.level == Level['1_b'])
+	if (profile_level_id.level == Level1_b)
 	{
 		switch (profile_level_id.profile)
 		{
-			case Profile.ConstrainedBaseline:
+			case ProfileConstrainedBaseline:
 				return '42f00b';
-			case Profile.Baseline:
+			case ProfileBaseline:
 				return '42100b';
-			case Profile.Main:
+			case ProfileMain:
 				return '4d100b';
 			// Level 1_b is not allowed for other profiles.
 			default:
@@ -204,19 +218,19 @@ exports.profileLevelIdToString = function(profile_level_id)
 
 	switch (profile_level_id.profile)
 	{
-		case Profile.ConstrainedBaseline:
+		case ProfileConstrainedBaseline:
 			profile_idc_iop_string = '42e0';
 			break;
-		case Profile.Baseline:
+		case ProfileBaseline:
 			profile_idc_iop_string = '4200';
 			break;
-		case Profile.Main:
+		case ProfileMain:
 			profile_idc_iop_string = '4d00';
 			break;
-		case Profile.ConstrainedHigh:
+		case ProfileConstrainedHigh:
 			profile_idc_iop_string = '640c';
 			break;
-		case Profile.High:
+		case ProfileHigh:
 			profile_idc_iop_string = '6400';
 			break;
 		// Unrecognized profile.
@@ -320,11 +334,11 @@ function byteMaskString(c, str)
 // Compare H264 levels and handle the level 1b case.
 function isLessLevel(a, b)
 {
-	if (a === Level['1_b'])
-		return b !== Level['1'] && b !== Level['1_b'];
+	if (a === Level1_b)
+		return b !== Level1 && b !== Level1_b;
 
-	if (b === Level['1_b'])
-		return a !== Level['1'];
+	if (b === Level1_b)
+		return a !== Level1;
 
 	return a < b;
 }
