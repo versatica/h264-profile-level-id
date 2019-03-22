@@ -1,11 +1,3 @@
-// enum Profile {
-//   kProfileConstrainedBaseline,
-//   kProfileBaseline,
-//   kProfileMain,
-//   kProfileConstrainedHigh,
-//   kProfileHigh,
-// };
-
 const Profile =
 {
 	ConstrainedBaseline : 1,
@@ -16,13 +8,6 @@ const Profile =
 };
 
 exports.Profile = Profile;
-
-// Table for converting between profile_idc/profile_iop to H264::Profile.
-// struct ProfilePattern {
-//   const uint8_t profile_idc;
-//   const BitPattern profile_iop;
-//   const Profile profile;
-// };
 
 // All values are equal to ten times the level number, except level 1b which is
 // special.
@@ -343,3 +328,8 @@ exports.profileLevelIdToString = function(profile_level_id)
 // 	(*answer_params)[kProfileLevelId] = *ProfileLevelIdToString(
 // 	    ProfileLevelId(local_profile_level_id->profile, answer_level));
 // }
+
+// Returns true if the parameters have the same H264 profile, i.e. the same
+// H264::Profile (Baseline, High, etc).
+// bool IsSameH264Profile(const CodecParameterMap& params1,
+//                        const CodecParameterMap& params2);
