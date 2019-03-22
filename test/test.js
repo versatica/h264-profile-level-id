@@ -26,8 +26,8 @@ const {
 	parseProfileLevelId,
 	profileLevelIdToString,
 	parseSdpProfileLevelId,
-	generateProfileLevelIdForAnswer,
-	isSameProfile
+	isSameProfile,
+	generateProfileLevelIdForAnswer
 } = require('../');
 /* eslint-enable no-unused-vars */
 
@@ -171,6 +171,35 @@ test('TestParseSdpProfileLevelIdInvalid', () =>
 	expect(parseSdpProfileLevelId(params)).toBeNull();
 });
 
+test('TestIsSameProfile', () =>
+{
+	expect(
+		isSameProfile({ foo: 'foo' }, { bar: 'bar' })
+	).toBe(true);
+	expect(
+		isSameProfile({ 'profile-level-id': '42e01f' }, { 'profile-level-id': '42C02A' })
+	).toBe(true);
+	expect(
+		isSameProfile({ 'profile-level-id': '42a01f' }, { 'profile-level-id': '58A01F' })
+	).toBe(true);
+	expect(
+		isSameProfile({ 'profile-level-id': '42e01f' }, undefined)
+	).toBe(true);
+});
+
+test('TestIsNotSameProfile', () =>
+{
+	expect(
+		isSameProfile(undefined, { 'profile-level-id': '4d001f' })
+	).toBe(false);
+	expect(
+		isSameProfile({ 'profile-level-id': '42a01f' }, { 'profile-level-id': '640c1f' })
+	).toBe(false);
+	expect(
+		isSameProfile({ 'profile-level-id': '42000a' }, { 'profile-level-id': '64002a' })
+	).toBe(false);
+});
+
 test('TestGenerateProfileLevelIdForAnswerEmpty', () =>
 {
 	expect(generateProfileLevelIdForAnswer(undefined, undefined)).toBeNull();
@@ -207,33 +236,4 @@ test('TestGenerateProfileLevelIdForAnswerConstrainedBaselineLevelAsymmetry', () 
 	};
 
 	expect(generateProfileLevelIdForAnswer(local_params, remote_params)).toBe('42e01f');
-});
-
-test('TestIsSameProfile', () =>
-{
-	expect(
-		isSameProfile({ foo: 'foo' }, { bar: 'bar' })
-	).toBe(true);
-	expect(
-		isSameProfile({ 'profile-level-id': '42e01f' }, { 'profile-level-id': '42C02A' })
-	).toBe(true);
-	expect(
-		isSameProfile({ 'profile-level-id': '42a01f' }, { 'profile-level-id': '58A01F' })
-	).toBe(true);
-	expect(
-		isSameProfile({ 'profile-level-id': '42e01f' }, undefined)
-	).toBe(true);
-});
-
-test('TestIsNotSameProfile', () =>
-{
-	expect(
-		isSameProfile(undefined, { 'profile-level-id': '4d001f' })
-	).toBe(false);
-	expect(
-		isSameProfile({ 'profile-level-id': '42a01f' }, { 'profile-level-id': '640c1f' })
-	).toBe(false);
-	expect(
-		isSameProfile({ 'profile-level-id': '42000a' }, { 'profile-level-id': '64002a' })
-	).toBe(false);
 });

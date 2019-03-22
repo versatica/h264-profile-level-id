@@ -266,6 +266,28 @@ exports.parseSdpProfileLevelId = function(params = {})
 };
 
 /**
+ * Returns true if the parameters have the same H264 profile, i.e. the same
+ * H264 profile (Baseline, High, etc).
+ *
+ * @param {Object} [params1={}] - Codec parameters object.
+ * @param {Object} [params2={}] - Codec parameters object.
+ *
+ * @returns {Boolean}
+ */
+exports.isSameProfile = function(params1 = {}, params2 = {})
+{
+	const profile_level_id_1 = exports.parseSdpProfileLevelId(params1);
+	const profile_level_id_2 = exports.parseSdpProfileLevelId(params2);
+
+	// Compare H264 profiles, but not levels.
+	return Boolean(
+		profile_level_id_1 &&
+		profile_level_id_2 &&
+		profile_level_id_1.profile === profile_level_id_2.profile
+	);
+};
+
+/**
  * Generate codec parameters that will be used as answer in an SDP negotiation
  * based on local supported parameters and remote offered parameters. Both
  * local_supported_params and remote_offered_params represent sendrecv media
@@ -341,28 +363,6 @@ exports.generateProfileLevelIdForAnswer = function(
 	// Return the resulting profile-level-id for the answer parameters.
 	return exports.profileLevelIdToString(
 		new ProfileLevelId(local_profile_level_id.profile, answer_level));
-};
-
-/**
- * Returns true if the parameters have the same H264 profile, i.e. the same
- * H264 profile (Baseline, High, etc).
- *
- * @param {Object} [params1={}] - Codec parameters object.
- * @param {Object} [params2={}] - Codec parameters object.
- *
- * @returns {Boolean}
- */
-exports.isSameProfile = function(params1 = {}, params2 = {})
-{
-	const profile_level_id_1 = exports.parseSdpProfileLevelId(params1);
-	const profile_level_id_2 = exports.parseSdpProfileLevelId(params2);
-
-	// Compare H264 profiles, but not levels.
-	return Boolean(
-		profile_level_id_1 &&
-		profile_level_id_2 &&
-		profile_level_id_1.profile === profile_level_id_2.profile
-	);
 };
 
 // Convert a string of 8 characters into a byte where the positions containing
