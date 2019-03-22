@@ -46,6 +46,19 @@ import {
 } from 'h264-profile-level-id';
 ```
 
+### ProfileLevelId
+
+Class containint both H264 Profile and Level.
+
+```js
+const profileLevelId = new ProfileLevelId(profile, level);
+
+console.log('profile:%d, level:%d', profileLevelId.profile, profileLevelId.level);
+```
+
+Both `profile` and `level` members are public.
+
+
 ### parseProfileLevelId(str)
 
 Parse profile level id that is represented as a string of 3 hex bytes. Nothing will be returned if the string is not a recognized H264 profile level id.
