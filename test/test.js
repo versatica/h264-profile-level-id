@@ -24,7 +24,8 @@ const {
 	Level5_2,
 	ProfileLevelId,
 	parseProfileLevelId,
-	profileLevelIdToString
+	profileLevelIdToString,
+	parseSdpProfileLevelId
 } = require('../');
 /* eslint-enable no-unused-vars */
 
@@ -140,4 +141,30 @@ test('TestToStringInvalid', () =>
 	expect(
 		profileLevelIdToString(new ProfileLevelId(255, Level3_1))
 	).toBeNull();
+});
+
+test('TestParseSdpProfileLevelIdEmpty', () =>
+{
+	const profile_level_id = parseSdpProfileLevelId();
+
+	expect(profile_level_id).toBeDefined();
+	expect(profile_level_id.profile).toBe(ProfileConstrainedBaseline);
+	expect(profile_level_id.level).toBe(Level3_1);
+});
+
+test('TestParseSdpProfileLevelIdConstrainedHigh', () =>
+{
+	const parameters = { 'profile-level-id': '640c2a' };
+	const profile_level_id = parseSdpProfileLevelId(parameters);
+
+	expect(profile_level_id).toBeDefined();
+	expect(profile_level_id.profile).toBe(ProfileConstrainedHigh);
+	expect(profile_level_id.level).toBe(Level4_2);
+});
+
+test('TestParseSdpProfileLevelIdInvalid', () =>
+{
+	const parameters = { 'profile-level-id': 'foobar' };
+
+	expect(parseSdpProfileLevelId(parameters)).toBeNull();
 });

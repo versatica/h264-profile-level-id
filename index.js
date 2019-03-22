@@ -247,6 +247,25 @@ exports.profileLevelIdToString = function(profile_level_id)
 };
 
 /**
+ * Parse profile level id that is represented as a string of 3 hex bytes
+ * contained in an SDP key-value map. A default profile level id will be
+ * returned if the profile-level-id key is missing. Nothing will be returned if
+ * the key is present but the string is invalid.
+ *
+ * @param {Object} parameters - Codec parameters object.
+ *
+ * @returns {ProfileLevelId}
+ */
+exports.parseSdpProfileLevelId = function(parameters = {})
+{
+	const profile_level_id = parameters['profile-level-id'];
+
+	return !profile_level_id
+		? DefaultProfileLevelId
+		: exports.parseProfileLevelId(profile_level_id);
+};
+
+/**
  * Generate codec parameters that will be used as answer in an SDP negotiation
  * based on local supported parameters and remote offered parameters. Both
  * local_supported_params, remote_offered_params, and answer_params
