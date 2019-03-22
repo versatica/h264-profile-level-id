@@ -26,6 +26,7 @@ const {
 	parseProfileLevelId,
 	profileLevelIdToString,
 	parseSdpProfileLevelId,
+	generateProfileLevelIdForAnswer,
 	isSameProfile
 } = require('../');
 /* eslint-enable no-unused-vars */
@@ -168,6 +169,44 @@ test('TestParseSdpProfileLevelIdInvalid', () =>
 	const params = { 'profile-level-id': 'foobar' };
 
 	expect(parseSdpProfileLevelId(params)).toBeNull();
+});
+
+test('TestGenerateProfileLevelIdForAnswerEmpty', () =>
+{
+	expect(generateProfileLevelIdForAnswer(undefined, undefined)).toBeNull();
+});
+
+test('TestGenerateProfileLevelIdForAnswerLevelSymmetryCapped', () =>
+{
+	const low_level =
+	{
+		'profile-level-id' : '42e015'
+	};
+
+	const high_level =
+	{
+		'profile-level-id' : '42e01f'
+	};
+
+	expect(generateProfileLevelIdForAnswer(low_level, high_level)).toBe('42e015');
+	expect(generateProfileLevelIdForAnswer(high_level, low_level)).toBe('42e015');
+});
+
+test('TestGenerateProfileLevelIdForAnswerConstrainedBaselineLevelAsymmetry', () =>
+{
+	const local_params =
+	{
+		'profile-level-id'        : '42e01f',
+		'level-asymmetry-allowed' : '1'
+	};
+
+	const remote_params =
+	{
+		'profile-level-id'        : '42e015',
+		'level-asymmetry-allowed' : '1'
+	};
+
+	expect(generateProfileLevelIdForAnswer(local_params, remote_params)).toBe('42e01f');
 });
 
 test('TestIsSameProfile', () =>

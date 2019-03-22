@@ -252,7 +252,7 @@ exports.profileLevelIdToString = function(profile_level_id)
  * returned if the profile-level-id key is missing. Nothing will be returned if
  * the key is present but the string is invalid.
  *
- * @param {Object} params - Codec parameters object.
+ * @param {Object} [params={}] - Codec parameters object.
  *
  * @returns {ProfileLevelId}
  */
@@ -268,74 +268,89 @@ exports.parseSdpProfileLevelId = function(params = {})
 /**
  * Generate codec parameters that will be used as answer in an SDP negotiation
  * based on local supported parameters and remote offered parameters. Both
- * local_supported_params, remote_offered_params, and answer_params
- * represent sendrecv media descriptions, i.e they are a mix of both encode and
- * decode capabilities. In theory, when the profile in local_supported_params
- * represent a strict superset of the profile in remote_offered_params, we
- * could limit the profile in answer_params to the profile in
- * remote_offered_params. However, to simplify the code, each supported H264
- * profile should be listed explicitly in the list of local supported codecs,
- * even if they are redundant. Then each local codec in the list should be
- * tested one at a time against the remote codec, and only when the profiles are
- * equal should this function be called. Therefore, this function does not need
- * to handle profile intersection, and the profile of local_supported_params
- * and remote_offered_params must be equal before calling this function. The
- * parameters that are used when negotiating are the level part of
- * profile-level-id and level-asymmetry-allowed.
+ * local_supported_params and remote_offered_params represent sendrecv media
+ * descriptions, i.e they are a mix of both encode and decode capabilities. In
+ * theory, when the profile in local_supported_params represent a strict superset
+ * of the profile in remote_offered_params, we could limit the profile in the
+ * answer to the profile in remote_offered_params.
  *
- * @param {Array<String>} local_supported_profile_levels_ids
- * @param {Array<String>} remote_offered_profile_levels_ids
- * @param {Boolean} level_asymmetry_allowed - Must be allowed by local and remote.
+ * However, to simplify the code, each supported H264 profile should be listed
+ * explicitly in the list of local supported codecs, even if they are redundant.
+ * Then each local codec in the list should be tested one at a time against the
+ * remote codec, and only when the profiles are equal should this function be
+ * called. Therefore, this function does not need to handle profile intersection,
+ * and the profile of local_supported_params and remote_offered_params must be
+ * equal before calling this function. The parameters that are used when
+ * negotiating are the level part of profile-level-id and level-asymmetry-allowed.
+ *
+ * @param {Object} [local_supported_params={}]
+ * @param {Object} [remote_offered_params={}]
  *
  * @returns {String} Canonical string representation as three hex bytes of the
- *   profile level id, or null if not found or invalid.
+ *   profile level id, or null if no one of the params have profile-level-id.
+ *
+ * @throws {TypeError} If Profile mismatch or invalid params.
  */
-// export function generateProfileLevelIdForAnswer(
-// 	local_supported_profile_levels_ids,
-// 	remote_offered_profile_levels_ids,
-// 	level_asymmetry_allowed
-// )
-// {
-// 	// If both local and remote have zero profile-level-id values, they are both
-// 	// using the default profile. In this case, don't set profile-level-id in answer
-// 	// either.
-// 	if (
-// 		local_supported_profile_levels_ids.length === 0 &&
-// 		remote_offered_profile_levels_ids.length === 0
-// 	)
-// 	{
-// 		return ''; // TODO
-// 	}
+exports.generateProfileLevelIdForAnswer = function(
+	local_supported_params = {},
+	remote_offered_params = {}
+)
+{
+	// If both local and remote have zero profile-level-id values, they are both
+	// using the default profile. In this case, don't return anything.
+	// either.
+	if (
+		!local_supported_params['profile-level-id'] &&
+		!remote_offered_params['profile-level-id']
+	)
+	{
+		return null;
+	}
 
-// 	// Parse profile-level-ids.
-// 	const local_profile_level_id =
-// 		ParseSdpProfileLevelId(local_supported_params);
-// 	const rtc::Optional<ProfileLevelId> remote_profile_level_id =
-// 	    ParseSdpProfileLevelId(remote_offered_params);
-// 	// The local and remote codec must have valid and equal H264 Profiles.
-// 	RTC_DCHECK(local_profile_level_id);
-// 	RTC_DCHECK(remote_profile_level_id);
-// 	RTC_DCHECK_EQ(local_profile_level_id->profile,
-// 	              remote_profile_level_id->profile);
-// 	// Parse level information.
-// 	const bool level_asymmetry_allowed =
-// 	    IsLevelAsymmetryAllowed(local_supported_params) &&
-// 	    IsLevelAsymmetryAllowed(remote_offered_params);
-// 	const Level local_level = local_profile_level_id->level;
-// 	const Level remote_level = remote_profile_level_id->level;
-// 	const Level min_level = Min(local_level, remote_level);
-// 	// Determine answer level. When level asymmetry is not allowed, level upgrade
-// 	// is not allowed, i.e., the level in the answer must be equal to or lower
-// 	// than the level in the offer.
-// 	const Level answer_level = level_asymmetry_allowed ? local_level : min_level;
-// 	// Set the resulting profile-level-id in the answer parameters.
-// 	(*answer_params)[kProfileLevelId] = *ProfileLevelIdToString(
-// 	    ProfileLevelId(local_profile_level_id->profile, answer_level));
-// }
+	// Parse profile-level-ids.
+	const local_profile_level_id =
+		exports.parseSdpProfileLevelId(local_supported_params);
+	const remote_profile_level_id =
+		exports.parseSdpProfileLevelId(remote_offered_params);
+
+	// The local and remote codec must have valid and equal H264 Profiles.
+	if (!local_profile_level_id)
+		throw new TypeError('invalid local_profile_level_id');
+
+	if (!remote_profile_level_id)
+		throw new TypeError('invalid remote_profile_level_id');
+
+	if (local_profile_level_id.profile !== remote_profile_level_id.profile)
+		throw new TypeError('H264 Profile mismatch');
+
+	// Parse level information.
+	const level_asymmetry_allowed = (
+		isLevelAsymmetryAllowed(local_supported_params) &&
+		isLevelAsymmetryAllowed(remote_offered_params)
+	);
+
+	const local_level = local_profile_level_id.level;
+	const remote_level = remote_profile_level_id.level;
+	const min_level = minLevel(local_level, remote_level);
+
+	// Determine answer level. When level asymmetry is not allowed, level upgrade
+	// is not allowed, i.e., the level in the answer must be equal to or lower
+	// than the level in the offer.
+	const answer_level = level_asymmetry_allowed ? local_level : min_level;
+
+	// Return the resulting profile-level-id for the answer parameters.
+	return exports.profileLevelIdToString(
+		new ProfileLevelId(local_profile_level_id.profile, answer_level));
+};
 
 /**
  * Returns true if the parameters have the same H264 profile, i.e. the same
  * H264 profile (Baseline, High, etc).
+ *
+ * @param {Object} [params1={}] - Codec parameters object.
+ * @param {Object} [params2={}] - Codec parameters object.
+ *
+ * @returns {Boolean}
  */
 exports.isSameProfile = function(params1 = {}, params2 = {})
 {
@@ -377,4 +392,14 @@ function isLessLevel(a, b)
 function minLevel(a, b)
 {
 	return isLessLevel(a, b) ? a : b;
+}
+
+function isLevelAsymmetryAllowed(params = {})
+{
+	const level_asymmetry_allowed = params['level-asymmetry-allowed'];
+
+	return (
+		level_asymmetry_allowed === 1 ||
+		level_asymmetry_allowed === '1'
+	);
 }
