@@ -206,7 +206,7 @@ exports.parseProfileLevelId = function(str)
  * Returns canonical string representation as three hex bytes of the profile
  * level id, or returns nothing for invalid profile level ids.
  *
- * @param {ProfileLevelId} profileLevelId
+ * @param {ProfileLevelId} profile_level_id
  *
  * @returns {String}
  */

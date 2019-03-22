@@ -1,6 +1,6 @@
 {
   "name": "h264-profile-level-id",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Utility to process H264 profile-level-id values",
   "author": "Iñaki Baz Castillo <ibc@aliax.net> (https://inakibaz.me)",
   "license": "ISC",
@@ -22,13 +22,13 @@
     "testEnvironment": "node",
     "testRegex": "test/test.*\\.js"
   },
+  "dependencies": {
+    "debug": "^4.1.1"
+  },
   "devDependencies": {
     "eslint": "^5.15.2",
     "eslint-plugin-jest": "^22.4.1",
     "jest": "^24.5.0",
     "opn-cli": "^4.0.0"
-  },
-  "dependencies": {
-    "debug": "^4.1.1"
   }
 }
