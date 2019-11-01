@@ -6,6 +6,8 @@ JavaScript utility to process [H264](https://tools.ietf.org/html/rfc6184) `profi
 $ npm install h264-profile-level-id
 ```
 
+This library provides TypeScript definitions.
+
 
 ## API
 

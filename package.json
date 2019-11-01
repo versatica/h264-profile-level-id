@@ -1,6 +1,6 @@
 {
   "name": "h264-profile-level-id",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Utility to process H264 profile-level-id values",
   "author": "Iñaki Baz Castillo <ibc@aliax.net> (https://inakibaz.me)",
   "license": "ISC",
@@ -9,13 +9,14 @@
     "url": "https://github.com/ibc/h264-profile-level-id.git"
   },
   "main": "index.js",
+  "types": "index.d.ts",
   "engines": {
     "node": ">=8.0.0"
   },
   "scripts": {
     "lint": "eslint -c .eslintrc.js index.js test",
     "test": "jest",
-    "coverage": "jest --coverage && opn coverage/lcov-report/index.html"
+    "coverage": "jest --coverage && open-cli coverage/lcov-report/index.html"
   },
   "jest": {
     "verbose": true,
@@ -26,9 +27,9 @@
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "eslint": "^5.15.2",
-    "eslint-plugin-jest": "^22.4.1",
-    "jest": "^24.5.0",
-    "opn-cli": "^4.0.0"
+    "eslint": "^6.6.0",
+    "eslint-plugin-jest": "^23.0.2",
+    "jest": "^24.9.0",
+    "opn-cli": "^5.0.0"
   }
 }
