@@ -1,7 +1,9 @@
 const debug = require('debug')('h264-profile-level-id');
+const warn = require('debug')('h264-profile-level-id:WARN');
 
 /* eslint-disable no-console */
 debug.log = console.info.bind(console);
+warn.log = console.warn.bind(console);
 /* eslint-enable no-console */
 
 const ProfileConstrainedBaseline = 1;
@@ -82,8 +84,8 @@ const DefaultProfileLevelId =
 // flag specifies if level 1b or level 1.1 is used.
 const ConstraintSet3Flag = 0x10;
 
-// Class for matching bit patterns such as "x1xx0000" where 'x' is allowed to be
-// either 0 or 1.
+// Class for matching bit patterns such as "x1xx0000" where 'x' is allowed to
+// be either 0 or 1.
 class BitPattern
 {
 	constructor(str)
@@ -135,12 +137,16 @@ exports.parseProfileLevelId = function(str)
 {
 	// The string should consist of 3 bytes in hexadecimal format.
 	if (typeof str !== 'string' || str.length !== 6)
+	{
 		return null;
+	}
 
 	const profile_level_id_numeric = parseInt(str, 16);
 
 	if (profile_level_id_numeric === 0)
+	{
 		return null;
+	}
 
 	// Separate into three bytes.
 	const level_idc = profile_level_id_numeric & 0xFF;
@@ -179,7 +185,9 @@ exports.parseProfileLevelId = function(str)
 		// Unrecognized level_idc.
 		default:
 		{
-			debug('parseProfileLevelId() | unrecognized level_idc:%s', level_idc);
+			warn(
+				`parseProfileLevelId() | unrecognized level_idc [str:${str}, level_idc:${level_idc}]`
+			);
 
 			return null;
 		}
@@ -197,7 +205,9 @@ exports.parseProfileLevelId = function(str)
 		}
 	}
 
-	debug('parseProfileLevelId() | unrecognized profile_idc/profile_iop combination');
+	warn(
+		`parseProfileLevelId() | unrecognized profile_idc/profile_iop combination [str:${str}, profile_idc:${profile_idc}, profile_iop:${profile_iop}]`
+	);
 
 	return null;
 };
@@ -232,9 +242,9 @@ exports.profileLevelIdToString = function(profile_level_id)
 			// Level 1_b is not allowed for other profiles.
 			default:
 			{
-				debug(
-					'profileLevelIdToString() | Level 1_b not is allowed for profile:%s',
-					profile_level_id.profile);
+				warn(
+					`profileLevelIdToString() | Level 1_b not is allowed for profile ${profile_level_id.profile}`
+				);
 
 				return null;
 			}
@@ -272,9 +282,9 @@ exports.profileLevelIdToString = function(profile_level_id)
 		}
 		default:
 		{
-			debug(
-				'profileLevelIdToString() | unrecognized profile:%s',
-				profile_level_id.profile);
+			warn(
+				`profileLevelIdToString() | unrecognized profile ${profile_level_id.profile}`
+			);
 
 			return null;
 		}
@@ -283,7 +293,9 @@ exports.profileLevelIdToString = function(profile_level_id)
 	let levelStr = (profile_level_id.level).toString(16);
 
 	if (levelStr.length === 1)
+	{
 		levelStr = `0${levelStr}`;
+	}
 
 	return `${profile_idc_iop_string}${levelStr}`;
 };
@@ -291,8 +303,8 @@ exports.profileLevelIdToString = function(profile_level_id)
 /**
  * Parse profile level id that is represented as a string of 3 hex bytes
  * contained in an SDP key-value map. A default profile level id will be
- * returned if the profile-level-id key is missing. Nothing will be returned if
- * the key is present but the string is invalid.
+ * returned if the profile-level-id key is missing. Nothing will be returned
+ * if the key is present but the string is invalid.
  *
  * @param {Object} [params={}] - Codec parameters object.
  *
@@ -334,9 +346,9 @@ exports.isSameProfile = function(params1 = {}, params2 = {})
  * based on local supported parameters and remote offered parameters. Both
  * local_supported_params and remote_offered_params represent sendrecv media
  * descriptions, i.e they are a mix of both encode and decode capabilities. In
- * theory, when the profile in local_supported_params represent a strict superset
- * of the profile in remote_offered_params, we could limit the profile in the
- * answer to the profile in remote_offered_params.
+ * theory, when the profile in local_supported_params represent a strict
+ * superset of the profile in remote_offered_params, we could limit the profile
+ * in the answer to the profile in remote_offered_params.
  *
  * However, to simplify the code, each supported H264 profile should be listed
  * explicitly in the list of local supported codecs, even if they are redundant.
@@ -367,8 +379,9 @@ exports.generateProfileLevelIdForAnswer = function(
 		!remote_offered_params['profile-level-id']
 	)
 	{
-		debug(
-			'generateProfileLevelIdForAnswer() | no profile-level-id in local and remote params');
+		warn(
+			'generateProfileLevelIdForAnswer() | profile-level-id missing in local and remote params'
+		);
 
 		return null;
 	}
@@ -381,13 +394,19 @@ exports.generateProfileLevelIdForAnswer = function(
 
 	// The local and remote codec must have valid and equal H264 Profiles.
 	if (!local_profile_level_id)
+	{
 		throw new TypeError('invalid local_profile_level_id');
+	}
 
 	if (!remote_profile_level_id)
+	{
 		throw new TypeError('invalid remote_profile_level_id');
+	}
 
 	if (local_profile_level_id.profile !== remote_profile_level_id.profile)
+	{
 		throw new TypeError('H264 Profile mismatch');
+	}
 
 	// Parse level information.
 	const level_asymmetry_allowed = (
@@ -405,8 +424,8 @@ exports.generateProfileLevelIdForAnswer = function(
 	const answer_level = level_asymmetry_allowed ? local_level : min_level;
 
 	debug(
-		'generateProfileLevelIdForAnswer() | result: [profile:%s, level:%s]',
-		local_profile_level_id.profile, answer_level);
+		`generateProfileLevelIdForAnswer() | result [profile:${local_profile_level_id.profile}, level:${answer_level}]`
+	);
 
 	// Return the resulting profile-level-id for the answer parameters.
 	return exports.profileLevelIdToString(
@@ -429,10 +448,14 @@ function byteMaskString(c, str)
 function isLessLevel(a, b)
 {
 	if (a === Level1_b)
+	{
 		return b !== Level1 && b !== Level1_b;
+	}
 
 	if (b === Level1_b)
+	{
 		return a !== Level1;
+	}
 
 	return a < b;
 }

@@ -37,14 +37,15 @@ declare module 'h264-profile-level-id'
 	 * Nothing will be returned if the string is not a recognized H264 profile
 	 * level id.
 	 */
-	export function parseProfileLevelId(str: string): ProfileLevelId
+	export function parseProfileLevelId(str: string):
+		ProfileLevelId | null
 
 	/**
 	 * Returns canonical string representation as three hex bytes of the profile
 	 * level id, or returns nothing for invalid profile level ids.
 	 */
 	// eslint-disable-next-line camelcase, @typescript-eslint/camelcase
-	export function profileLevelIdToString(profile_level_id: ProfileLevelId): string
+	export function profileLevelIdToString(profile_level_id: ProfileLevelId): string | null
 
 	/**
 	 * Parse profile level id that is represented as a string of 3 hex bytes
@@ -85,5 +86,5 @@ declare module 'h264-profile-level-id'
 		local_supported_params: object,
 		// eslint-disable-next-line camelcase, @typescript-eslint/camelcase
 		remote_offered_params: object
-	): string
+	): string | null
 }
