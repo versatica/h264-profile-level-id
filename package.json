@@ -1,6 +1,6 @@
 {
   "name": "h264-profile-level-id",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Utility to process H264 profile-level-id values",
   "author": "Iñaki Baz Castillo <ibc@aliax.net> (https://inakibaz.me)",
   "license": "ISC",
