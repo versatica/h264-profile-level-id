@@ -30,8 +30,11 @@ declare module 'h264-profile-level-id'
 	export const Level5_2: number;
 	/* eslint-enable camelcase, @typescript-eslint/camelcase */
 
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
-	export interface ProfileLevelId {}
+	export interface ProfileLevelId
+	{
+		readonly profile: number;
+		readonly level: number;
+	}
 
 	/**
 	 * Parse profile level id that is represented as a string of 3 hex bytes.
@@ -47,6 +50,18 @@ declare module 'h264-profile-level-id'
 	 */
 	// eslint-disable-next-line camelcase, @typescript-eslint/camelcase
 	export function profileLevelIdToString(profile_level_id: ProfileLevelId): string | null
+
+	/**
+	 * Prints the name of given profile.
+	 */
+	// eslint-disable-next-line camelcase, @typescript-eslint/camelcase
+	export function profileToString(profile: number): string | null
+
+	/**
+	 * Prints the name of given level.
+	 */
+	// eslint-disable-next-line camelcase, @typescript-eslint/camelcase
+	export function levelToString(level: number): string | null
 
 	/**
 	 * Parse profile level id that is represented as a string of 3 hex bytes

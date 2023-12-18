@@ -296,6 +296,138 @@ exports.profileLevelIdToString = function(profile_level_id)
 };
 
 /**
+ * Prints name of given profile.
+ *
+ * @param {number} profile
+ *
+ * @returns {String}
+ */
+exports.profileToString = function(profile)
+{
+	switch (profile)
+	{
+		case ProfileConstrainedBaseline:
+		{
+			return 'ConstrainedBaseline';
+		}
+		case ProfileBaseline:
+		{
+			return 'Baseline';
+		}
+		case ProfileMain:
+		{
+			return 'Main';
+		}
+		case ProfileConstrainedHigh:
+		{
+			return 'ConstrainedHigh';
+		}
+		case ProfileHigh:
+		{
+			return 'High';
+		}
+		case ProfilePredictiveHigh444:
+		{
+			return 'PredictiveHigh444';
+		}
+		default:
+		{
+			warn(`profileToString() | unrecognized profile ${profile}`);
+
+			return null;
+		}
+	}
+};
+
+/**
+ * Prints name of given level.
+ *
+ * @param {number} level
+ *
+ * @returns {String}
+ */
+exports.levelToString = function(level)
+{
+	switch (level)
+	{
+		case Level1_b:
+		{
+			return '1b';
+		}
+		case Level1:
+		{
+			return '1';
+		}
+		case Level1_1:
+		{
+			return '1.1';
+		}
+		case Level1_2:
+		{
+			return '1.2';
+		}
+		case Level1_3:
+		{
+			return '1.3';
+		}
+		case Level2:
+		{
+			return '2';
+		}
+		case Level2_1:
+		{
+			return '2.1';
+		}
+		case Level2_2:
+		{
+			return '2.2';
+		}
+		case Level3:
+		{
+			return '3';
+		}
+		case Level3_1:
+		{
+			return '3.1';
+		}
+		case Level3_2:
+		{
+			return '3.2';
+		}
+		case Level4:
+		{
+			return '4';
+		}
+		case Level4_1:
+		{
+			return '4.1';
+		}
+		case Level4_2:
+		{
+			return '4.2';
+		}
+		case Level5:
+		{
+			return '5';
+		}
+		case Level5_1:
+		{
+			return '5.1';
+		}
+		case Level5_2:
+		{
+			return '5.2';
+		}
+		default:
+		{
+			warn(`levelToString() | unrecognized level ${level}`);
+
+			return null;
+		}
+	}
+};
+
+/**
  * Parse profile level id that is represented as a string of 3 hex bytes
  * contained in an SDP key-value map. A default profile level id will be
  * returned if the profile-level-id key is missing. Nothing will be returned

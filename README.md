@@ -46,6 +46,8 @@ import {
   // Functions.
   parseProfileLevelId,
   profileLevelIdToString,
+  profileToString,
+  levelToString,
   parseSdpProfileLevelId,
   isSameProfile,
   generateProfileLevelIdForAnswer
@@ -79,7 +81,25 @@ Parse profile level id that is represented as a string of 3 hex bytes. Nothing w
 Returns canonical string representation as three hex bytes of the profile level id, or returns nothing for invalid profile level ids.
 
 * `@param` {ProfileLevelId} **profile_level_id** - A instance of the `ProfileLevelId` class.
-* `@returns` {String}
+* `@returns` {String|null}
+
+
+### profileToString(str)
+
+Prints name of given profile.
+
+* `@param` {number} **profile**
+
+* `@returns` {String|null}
+
+
+### levelToString(str)
+
+Prints name of given level.
+
+* `@param` {number} **level**
+
+* `@returns` {String|null}
 
 
 ### parseSdpProfileLevelId(params={})
