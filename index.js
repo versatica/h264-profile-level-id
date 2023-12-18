@@ -11,12 +11,14 @@ const ProfileBaseline = 2;
 const ProfileMain = 3;
 const ProfileConstrainedHigh = 4;
 const ProfileHigh = 5;
+const ProfilePredictiveHigh444 = 6;
 
 exports.ProfileConstrainedBaseline = ProfileConstrainedBaseline;
 exports.ProfileBaseline = ProfileBaseline;
 exports.ProfileMain = ProfileMain;
 exports.ProfileConstrainedHigh = ProfileConstrainedHigh;
 exports.ProfileHigh = ProfileHigh;
+exports.ProfilePredictiveHigh444 = ProfilePredictiveHigh444;
 
 // All values are equal to ten times the level number, except level 1b which is
 // special.
@@ -67,23 +69,6 @@ class ProfileLevelId
 
 exports.ProfileLevelId = ProfileLevelId;
 
-// Default ProfileLevelId.
-//
-// TODO: The default should really be profile Baseline and level 1 according to
-// the spec: https://tools.ietf.org/html/rfc6184#section-8.1. In order to not
-// break backwards compatibility with older versions of WebRTC where external
-// codecs don't have any parameters, use profile ConstrainedBaseline level 3_1
-// instead. This workaround will only be done in an interim period to allow
-// external clients to update their code.
-//
-// http://crbug/webrtc/6337.
-const DefaultProfileLevelId =
-	new ProfileLevelId(ProfileConstrainedBaseline, Level3_1);
-
-// For level_idc=11 and profile_idc=0x42, 0x4D, or 0x58, the constraint set3
-// flag specifies if level 1b or level 1.1 is used.
-const ConstraintSet3Flag = 0x10;
-
 // Class for matching bit patterns such as "x1xx0000" where 'x' is allowed to
 // be either 0 or 1.
 class BitPattern
@@ -121,7 +106,8 @@ const ProfilePatterns =
 	new ProfilePattern(0x58, new BitPattern('10xx0000'), ProfileBaseline),
 	new ProfilePattern(0x4D, new BitPattern('0x0x0000'), ProfileMain),
 	new ProfilePattern(0x64, new BitPattern('00000000'), ProfileHigh),
-	new ProfilePattern(0x64, new BitPattern('00001100'), ProfileConstrainedHigh)
+	new ProfilePattern(0x64, new BitPattern('00001100'), ProfileConstrainedHigh),
+	new ProfilePattern(0xF4, new BitPattern('00000000'), ProfilePredictiveHigh444)
 ];
 
 /**
@@ -135,6 +121,10 @@ const ProfilePatterns =
  */
 exports.parseProfileLevelId = function(str)
 {
+	// For level_idc=11 and profile_idc=0x42, 0x4D, or 0x58, the constraint set3
+	// flag specifies if level 1b or level 1.1 is used.
+	const ConstraintSet3Flag = 0x10;
+
 	// The string should consist of 3 bytes in hexadecimal format.
 	if (typeof str !== 'string' || str.length !== 6)
 	{
@@ -280,6 +270,11 @@ exports.profileLevelIdToString = function(profile_level_id)
 			profile_idc_iop_string = '6400';
 			break;
 		}
+		case ProfilePredictiveHigh444:
+		{
+			profile_idc_iop_string = 'f400';
+			break;
+		}
 		default:
 		{
 			warn(
@@ -312,6 +307,19 @@ exports.profileLevelIdToString = function(profile_level_id)
  */
 exports.parseSdpProfileLevelId = function(params = {})
 {
+	// Default ProfileLevelId.
+	//
+	// TODO: The default should really be profile Baseline and level 1 according to
+	// the spec: https://tools.ietf.org/html/rfc6184#section-8.1. In order to not
+	// break backwards compatibility with older versions of WebRTC where external
+	// codecs don't have any parameters, use profile ConstrainedBaseline level 3_1
+	// instead. This workaround will only be done in an interim period to allow
+	// external clients to update their code.
+	//
+	// http://crbug/webrtc/6337.
+	const DefaultProfileLevelId =
+		new ProfileLevelId(ProfileConstrainedBaseline, Level3_1);
+
 	const profile_level_id = params['profile-level-id'];
 
 	return !profile_level_id

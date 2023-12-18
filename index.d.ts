@@ -5,6 +5,7 @@ declare module 'h264-profile-level-id'
 	export const ProfileMain: number;
 	export const ProfileConstrainedHigh: number;
 	export const ProfileHigh: number;
+	export const ProfilePredictiveHigh444: number;
 
 	// All values are equal to ten times the level number, except level 1b which is
 	// special.

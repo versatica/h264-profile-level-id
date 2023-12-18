@@ -11,7 +11,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=10.0.0"
   },
   "scripts": {
     "lint": "eslint -c .eslintrc.js index.js test",
@@ -27,7 +27,7 @@
     "debug": "^4.3.4"
   },
   "devDependencies": {
-    "eslint": "^8.55.0",
+    "eslint": "^8.56.0",
     "eslint-plugin-jest": "^27.6.0",
     "jest": "^29.7.0",
     "opn-cli": "^5.0.0"

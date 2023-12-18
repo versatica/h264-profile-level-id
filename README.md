@@ -19,6 +19,7 @@ import {
   ProfileMain,
   ProfileConstrainedHigh,
   ProfileHigh,
+  ProfilePredictiveHigh444,
   // H264 Level identifiers.
   Level1_b,
   Level1,
