@@ -1,6 +1,9 @@
 # h264-profile-level-id
 
-JavaScript utility to process [H264](https://tools.ietf.org/html/rfc6184) `profile-level-id` values based on Google's [libwebrtc](https://chromium.googlesource.com/external/webrtc/+/refs/heads/master/media/base/h264_profile_level_id.h) C++ code.
+JavaScript utility to process [H264](https://tools.ietf.org/html/rfc6184) `profile-level-id` values based on Google's libwebrtc C++ code:
+- [h264_profile_level_id.cc](https://webrtc.googlesource.com/src/+/refs/heads/main/api/video_codecs/h264_profile_level_id.cc)
+- [h264_profile_level_id.h](https://webrtc.googlesource.com/src/+/refs/heads/main/api/video_codecs/h264_profile_level_id.h)
+- [h264_profile_level_id_unittest.cc](https://webrtc.googlesource.com/src/+/refs/heads/main/api/video_codecs/test/h264_profile_level_id_unittest.cc)
 
 ```bash
 $ npm install h264-profile-level-id
