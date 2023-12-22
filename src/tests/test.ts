@@ -33,11 +33,11 @@ test('TestParsingInvalid', () =>
 
 test('TestParsingLevel', () =>
 {
-	expect(parseProfileLevelId('42e01f')?.level).toBe(Level.Level3_1);
-	expect(parseProfileLevelId('42e00b')?.level).toBe(Level.Level1_1);
-	expect(parseProfileLevelId('42f00b')?.level).toBe(Level.Level1_b);
-	expect(parseProfileLevelId('42C02A')?.level).toBe(Level.Level4_2);
-	expect(parseProfileLevelId('640c34')?.level).toBe(Level.Level5_2);
+	expect(parseProfileLevelId('42e01f')?.level).toBe(Level.L3_1);
+	expect(parseProfileLevelId('42e00b')?.level).toBe(Level.L1_1);
+	expect(parseProfileLevelId('42f00b')?.level).toBe(Level.L1_b);
+	expect(parseProfileLevelId('42C02A')?.level).toBe(Level.L4_2);
+	expect(parseProfileLevelId('640c34')?.level).toBe(Level.L5_2);
 });
 
 test('TestParsingConstrainedBaseline', () =>
@@ -83,36 +83,36 @@ test('TestParsingConstrainedHigh', () =>
 test('TestToString', () =>
 {
 	expect(profileLevelIdToString(
-		new ProfileLevelId(Profile.ConstrainedBaseline, Level.Level3_1)
+		new ProfileLevelId(Profile.ConstrainedBaseline, Level.L3_1)
 	)).toBe('42e01f');
 
 	expect(profileLevelIdToString(
-		new ProfileLevelId(Profile.Baseline, Level.Level1)
+		new ProfileLevelId(Profile.Baseline, Level.L1)
 	)).toBe('42000a');
 
 	expect(profileLevelIdToString(
-		new ProfileLevelId(Profile.Main, Level.Level3_1)
+		new ProfileLevelId(Profile.Main, Level.L3_1)
 	)).toBe('4d001f');
 
 	expect(profileLevelIdToString(
-		new ProfileLevelId(Profile.ConstrainedHigh, Level.Level4_2)
+		new ProfileLevelId(Profile.ConstrainedHigh, Level.L4_2)
 	)).toBe('640c2a');
 
 	expect(profileLevelIdToString(
-		new ProfileLevelId(Profile.High, Level.Level4_2)
+		new ProfileLevelId(Profile.High, Level.L4_2)
 	)).toBe('64002a');
 });
 
 test('TestToStringLevel1b', () =>
 {
 	expect(profileLevelIdToString(
-		new ProfileLevelId(Profile.ConstrainedBaseline, Level.Level1_b)
+		new ProfileLevelId(Profile.ConstrainedBaseline, Level.L1_b)
 	)).toBe('42f00b');
 	expect(
-		profileLevelIdToString(new ProfileLevelId(Profile.Baseline, Level.Level1_b))
+		profileLevelIdToString(new ProfileLevelId(Profile.Baseline, Level.L1_b))
 	).toBe('42100b');
 	expect(
-		profileLevelIdToString(new ProfileLevelId(Profile.Main, Level.Level1_b))
+		profileLevelIdToString(new ProfileLevelId(Profile.Main, Level.L1_b))
 	).toBe('4d100b');
 });
 
@@ -146,15 +146,15 @@ test('TestToStringLevel1b', () =>
 test('TestToStringInvalid', () =>
 {
 	expect(profileLevelIdToString(
-		new ProfileLevelId(Profile.High, Level.Level1_b)
+		new ProfileLevelId(Profile.High, Level.L1_b)
 	)).toBeUndefined();
 
 	expect(profileLevelIdToString(
-		new ProfileLevelId(Profile.ConstrainedHigh, Level.Level1_b)
+		new ProfileLevelId(Profile.ConstrainedHigh, Level.L1_b)
 	)).toBeUndefined();
 
 	expect(profileLevelIdToString(
-		new ProfileLevelId(255 as Profile, Level.Level3_1)
+		new ProfileLevelId(255 as Profile, Level.L3_1)
 	)).toBeUndefined();
 });
 
@@ -164,7 +164,7 @@ test('TestParseSdpProfileLevelIdEmpty', () =>
 
 	expect(profile_level_id).toBeDefined();
 	expect(profile_level_id?.profile).toBe(Profile.ConstrainedBaseline);
-	expect(profile_level_id?.level).toBe(Level.Level3_1);
+	expect(profile_level_id?.level).toBe(Level.L3_1);
 });
 
 test('TestParseSdpProfileLevelIdConstrainedHigh', () =>
@@ -174,7 +174,7 @@ test('TestParseSdpProfileLevelIdConstrainedHigh', () =>
 
 	expect(profile_level_id).toBeDefined();
 	expect(profile_level_id?.profile).toBe(Profile.ConstrainedHigh);
-	expect(profile_level_id?.level).toBe(Level.Level4_2);
+	expect(profile_level_id?.level).toBe(Level.L4_2);
 });
 
 test('TestParseSdpProfileLevelIdInvalid', () =>

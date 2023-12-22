@@ -45,32 +45,32 @@ enum Profile
 ```ts
 enum Level
 {
-  Level1_b = 0,
-  Level1 = 10,
-  Level1_1 = 11,
-  Level1_2 = 12,
-  Level1_3 = 13,
-  Level2 = 20,
-  Level2_1 = 21,
-  Level2_2 = 22,
-  Level3 = 30,
-  Level3_1 = 31,
-  Level3_2 = 32,
-  Level4 = 40,
-  Level4_1 = 41,
-  Level4_2 = 42,
-  Level5 = 50,
-  Level5_1 = 51,
-  Level5_2 = 52
+  L1_b = 0,
+  L1 = 10,
+  L1_1 = 11,
+  L1_2 = 12,
+  L1_3 = 13,
+  L2 = 20,
+  L2_1 = 21,
+  L2_2 = 22,
+  L3 = 30,
+  L3_1 = 31,
+  L3_2 = 32,
+  L4 = 40,
+  L4_1 = 41,
+  L4_2 = 42,
+  L5 = 50,
+  L5_1 = 51,
+  L5_2 = 52
 }
 ```
 
 ### class ProfileLevelId
 
-Class containing both H264 Profile and Level.
+Class containing both H264 profile and level.
 
 ```js
-const profile_level_id = new ProfileLevelId(Profile.Main, Level.Level3_1);
+const profile_level_id = new ProfileLevelId(Profile.Main, Level.L3_1);
 
 console.log('profile:%d, level:%d', profile_level_id.profile, profile_level_id.level);
 // => profile:3, level:31

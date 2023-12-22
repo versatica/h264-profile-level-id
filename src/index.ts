@@ -26,23 +26,23 @@ export enum Profile
 // eslint-disable-next-line no-shadow
 export enum Level
 {
-	Level1_b = 0,
-	Level1 = 10,
-	Level1_1 = 11,
-	Level1_2 = 12,
-	Level1_3 = 13,
-	Level2 = 20,
-	Level2_1 = 21,
-	Level2_2 = 22,
-	Level3 = 30,
-	Level3_1 = 31,
-	Level3_2 = 32,
-	Level4 = 40,
-	Level4_1 = 41,
-	Level4_2 = 42,
-	Level5 = 50,
-	Level5_1 = 51,
-	Level5_2 = 52
+	L1_b = 0,
+	L1 = 10,
+	L1_1 = 11,
+	L1_2 = 12,
+	L1_3 = 13,
+	L2 = 20,
+	L2_1 = 21,
+	L2_2 = 22,
+	L3 = 30,
+	L3_1 = 31,
+	L3_2 = 32,
+	L4 = 40,
+	L4_1 = 41,
+	L4_2 = 42,
+	L5 = 50,
+	L5_1 = 51,
+	L5_2 = 52
 }
 
 /**
@@ -71,7 +71,7 @@ export class ProfileLevelId
 //
 // http://crbug/webrtc/6337.
 const DefaultProfileLevelId =
-	new ProfileLevelId(Profile.ConstrainedBaseline, Level.Level3_1);
+	new ProfileLevelId(Profile.ConstrainedBaseline, Level.L3_1);
 
 /**
  * Class for matching bit patterns such as "x1xx0000" where 'x' is allowed to
@@ -159,30 +159,30 @@ export function parseProfileLevelId(str: string): ProfileLevelId | undefined
 
 	switch (level_idc)
 	{
-		case Level.Level1_1:
+		case Level.L1_1:
 		{
 			level = (profile_iop & ConstraintSet3Flag) !== 0
-				? Level.Level1_b
-				: Level.Level1_1;
+				? Level.L1_b
+				: Level.L1_1;
 
 			break;
 		}
 
-		case Level.Level1:
-		case Level.Level1_2:
-		case Level.Level1_3:
-		case Level.Level2:
-		case Level.Level2_1:
-		case Level.Level2_2:
-		case Level.Level3:
-		case Level.Level3_1:
-		case Level.Level3_2:
-		case Level.Level4:
-		case Level.Level4_1:
-		case Level.Level4_2:
-		case Level.Level5:
-		case Level.Level5_1:
-		case Level.Level5_2:
+		case Level.L1:
+		case Level.L1_2:
+		case Level.L1_3:
+		case Level.L2:
+		case Level.L2_1:
+		case Level.L2_2:
+		case Level.L3:
+		case Level.L3_1:
+		case Level.L3_2:
+		case Level.L4:
+		case Level.L4_1:
+		case Level.L4_2:
+		case Level.L5:
+		case Level.L5_1:
+		case Level.L5_2:
 		{
 			level = level_idc;
 
@@ -228,7 +228,7 @@ export function profileLevelIdToString(
 ): string | undefined
 {
 	// Handle special case level == 1b.
-	if (profile_level_id.level == Level.Level1_b)
+	if (profile_level_id.level == Level.L1_b)
 	{
 		switch (profile_level_id.profile)
 		{
@@ -377,87 +377,87 @@ export function levelToString(level: Level): string | undefined
 {
 	switch (level)
 	{
-		case Level.Level1_b:
+		case Level.L1_b:
 		{
 			return '1b';
 		}
 
-		case Level.Level1:
+		case Level.L1:
 		{
 			return '1';
 		}
 
-		case Level.Level1_1:
+		case Level.L1_1:
 		{
 			return '1.1';
 		}
 
-		case Level.Level1_2:
+		case Level.L1_2:
 		{
 			return '1.2';
 		}
 
-		case Level.Level1_3:
+		case Level.L1_3:
 		{
 			return '1.3';
 		}
 
-		case Level.Level2:
+		case Level.L2:
 		{
 			return '2';
 		}
 
-		case Level.Level2_1:
+		case Level.L2_1:
 		{
 			return '2.1';
 		}
 
-		case Level.Level2_2:
+		case Level.L2_2:
 		{
 			return '2.2';
 		}
 
-		case Level.Level3:
+		case Level.L3:
 		{
 			return '3';
 		}
 
-		case Level.Level3_1:
+		case Level.L3_1:
 		{
 			return '3.1';
 		}
 
-		case Level.Level3_2:
+		case Level.L3_2:
 		{
 			return '3.2';
 		}
 
-		case Level.Level4:
+		case Level.L4:
 		{
 			return '4';
 		}
 
-		case Level.Level4_1:
+		case Level.L4_1:
 		{
 			return '4.1';
 		}
 
-		case Level.Level4_2:
+		case Level.L4_2:
 		{
 			return '4.2';
 		}
 
-		case Level.Level5:
+		case Level.L5:
 		{
 			return '5';
 		}
 
-		case Level.Level5_1:
+		case Level.L5_1:
 		{
 			return '5.1';
 		}
 
-		case Level.Level5_2:
+		case Level.L5_2:
 		{
 			return '5.2';
 		}
@@ -608,14 +608,14 @@ function byteMaskString(c: string, str: string): number
 // Compare H264 levels and handle the level 1b case.
 function isLessLevel(a: Level, b: Level): boolean
 {
-	if (a === Level.Level1_b)
+	if (a === Level.L1_b)
 	{
-		return b !== Level.Level1 && b !== Level.Level1_b;
+		return b !== Level.L1 && b !== Level.L1_b;
 	}
 
-	if (b === Level.Level1_b)
+	if (b === Level.L1_b)
 	{
-		return a !== Level.Level1;
+		return a !== Level.L1;
 	}
 
 	return a < b;
