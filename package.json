@@ -55,7 +55,8 @@
       ]
     },
     "coveragePathIgnorePatterns": [
-      "src/tests"
+      "src/tests",
+      "src/Logger"
     ],
     "cacheDirectory": ".cache/jest"
   },
