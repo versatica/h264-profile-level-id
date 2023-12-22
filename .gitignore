@@ -1,2 +1,7 @@
-/node_modules/
-/coverage/
+## Node.
+/node_modules
+/lib
+
+## Others.
+/coverage
+/.cache
