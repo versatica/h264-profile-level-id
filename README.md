@@ -1,5 +1,10 @@
 # h264-profile-level-id
 
+[![][npm-shield-h264-profile-level-id]][npm-h264-profile-level-id]
+[![][github-actions-shield-h264-profile-level-id]][github-actions-h264-profile-level-id]
+[![][opencollective-shield-mediasoup]][opencollective-mediasoup]
+
+
 TypeScript utility to process [H264](https://tools.ietf.org/html/rfc6184) `profile-level-id` values based on Google's libwebrtc C++ code:
 - [h264_profile_level_id.cc](https://webrtc.googlesource.com/src/+/refs/heads/main/api/video_codecs/h264_profile_level_id.cc)
 - [h264_profile_level_id.h](https://webrtc.googlesource.com/src/+/refs/heads/main/api/video_codecs/h264_profile_level_id.h)
@@ -123,3 +128,13 @@ See the [unit tests](src/tests/test.js).
 ## License
 
 [ISC](./LICENSE)
+
+
+
+
+[npm-shield-h264-profile-level-id]: https://img.shields.io/npm/v/h264-profile-level-id.svg
+[npm-h264-profile-level-id]: https://npmjs.org/package/h264-profile-level-id
+[github-actions-shield-h264-profile-level-id]: https://github.com/versatica/h264-profile-level-id/actions/workflows/h264-profile-level-id.yaml/badge.svg
+[github-actions-h264-profile-level-id]: https://github.com/versatica/h264-profile-level-id/actions/workflows/h264-profile-level-id.yaml
+[opencollective-shield-mediasoup]: https://img.shields.io/opencollective/all/mediasoup.svg
+[opencollective-mediasoup]: https://opencollective.com/mediasoup/
