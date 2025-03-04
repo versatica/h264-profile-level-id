@@ -8,6 +8,7 @@ import {
 	isSameProfile,
 	isSameProfileAndLevel,
 	generateProfileLevelIdStringForAnswer,
+	supportedLevel,
 } from '../';
 
 describe('parseProfileLevelId()', () => {
@@ -333,5 +334,25 @@ describe('generateProfileLevelIdStringForAnswer()', () => {
 		expect(
 			generateProfileLevelIdStringForAnswer(local_params, remote_params)
 		).toBe('42e01f');
+	});
+});
+
+describe('supportedLevel()', () => {
+	test('valid values', () => {
+		expect(supportedLevel(640 * 480, 25)).toBe(Level.L2_1);
+
+		expect(supportedLevel(1280 * 720, 30)).toBe(Level.L3_1);
+
+		expect(supportedLevel(1920 * 1280, 60)).toBe(Level.L4_2);
+	});
+
+	test('invalid values', () => {
+		expect(supportedLevel(0, 0)).toBeUndefined();
+
+		// All levels support fps > 5.
+		expect(supportedLevel(1280 * 720, 5)).toBeUndefined();
+
+		// All levels support frame sizes > 183 * 137.
+		expect(supportedLevel(183 * 137, 30)).toBeUndefined();
 	});
 });

@@ -127,6 +127,101 @@ const ProfilePatterns = [
 	),
 ];
 
+type LevelConstraint = {
+	max_macroblocks_per_second: number;
+	max_macroblock_frame_size: number;
+	level: Level;
+};
+
+// This is from ITU-T H.264 (02/2016) Table A-1 – Level limits.
+const LevelConstraints: LevelConstraint[] = [
+	{
+		max_macroblocks_per_second: 1485,
+		max_macroblock_frame_size: 99,
+		level: Level.L1,
+	},
+	{
+		max_macroblocks_per_second: 1485,
+		max_macroblock_frame_size: 99,
+		level: Level.L1_b,
+	},
+	{
+		max_macroblocks_per_second: 3000,
+		max_macroblock_frame_size: 396,
+		level: Level.L1_1,
+	},
+	{
+		max_macroblocks_per_second: 6000,
+		max_macroblock_frame_size: 396,
+		level: Level.L1_2,
+	},
+	{
+		max_macroblocks_per_second: 11880,
+		max_macroblock_frame_size: 396,
+		level: Level.L1_3,
+	},
+	{
+		max_macroblocks_per_second: 11880,
+		max_macroblock_frame_size: 396,
+		level: Level.L2,
+	},
+	{
+		max_macroblocks_per_second: 19800,
+		max_macroblock_frame_size: 792,
+		level: Level.L2_1,
+	},
+	{
+		max_macroblocks_per_second: 20250,
+		max_macroblock_frame_size: 1620,
+		level: Level.L2_2,
+	},
+	{
+		max_macroblocks_per_second: 40500,
+		max_macroblock_frame_size: 1620,
+		level: Level.L3,
+	},
+	{
+		max_macroblocks_per_second: 108000,
+		max_macroblock_frame_size: 3600,
+		level: Level.L3_1,
+	},
+	{
+		max_macroblocks_per_second: 216000,
+		max_macroblock_frame_size: 5120,
+		level: Level.L3_2,
+	},
+	{
+		max_macroblocks_per_second: 245760,
+		max_macroblock_frame_size: 8192,
+		level: Level.L4,
+	},
+	{
+		max_macroblocks_per_second: 245760,
+		max_macroblock_frame_size: 8192,
+		level: Level.L4_1,
+	},
+	{
+		max_macroblocks_per_second: 522240,
+		max_macroblock_frame_size: 8704,
+		level: Level.L4_2,
+	},
+	{
+		max_macroblocks_per_second: 589824,
+		max_macroblock_frame_size: 22080,
+		level: Level.L5,
+	},
+	{
+		max_macroblocks_per_second: 983040,
+		max_macroblock_frame_size: 36864,
+		level: Level.L5_1,
+	},
+	{
+		max_macroblocks_per_second: 2073600,
+		max_macroblock_frame_size: 36864,
+		level: Level.L5_2,
+	},
+];
+
 /**
  * Parse profile level id that is represented as a string of 3 hex bytes.
  * Nothing will be returned if the string is not a recognized H264 profile
@@ -200,6 +295,10 @@ export function parseProfileLevelId(str: string): ProfileLevelId | undefined {
 			profile_idc === pattern.profile_idc &&
 			pattern.profile_iop.isMatch(profile_iop)
 		) {
+			logger.debug(
+				`parseProfileLevelId() | result [str:${str}, profile:${pattern.profile}, level:${level}]`
+			);
+
 			return new ProfileLevelId(pattern.profile, level);
 		}
 	}
@@ -545,6 +644,43 @@ export function generateProfileLevelIdStringForAnswer(
 	return profileLevelIdToString(
 		new ProfileLevelId(local_profile_level_id.profile, answer_level)
 	);
+}
+
+/**
+ * Given that a decoder supports up to a given frame size (in pixels) at up to
+ * a given number of frames per second, return the highest H264 level where it
+ * can guarantee that it will be able to support all valid encoded streams that
+ * are within that level.
+ */
+export function supportedLevel(
+	max_frame_pixel_count: number,
+	max_fps: number
+): Level | undefined {
+	const PixelsPerMacroblock = 16 * 16;
+
+	for (let i = LevelConstraints.length - 1; i >= 0; --i) {
+		const level_constraint: LevelConstraint = LevelConstraints[i];
+
+		if (
+			level_constraint.max_macroblock_frame_size * PixelsPerMacroblock <=
+				max_frame_pixel_count &&
+			level_constraint.max_macroblocks_per_second <=
+				max_fps * level_constraint.max_macroblock_frame_size
+		) {
+			logger.debug(
+				`supportedLevel() | result [max_frame_pixel_count:${max_frame_pixel_count}, max_fps:${max_fps}, level:${level_constraint.level}]`
+			);
+
+			return level_constraint.level;
+		}
+	}
+
+	// No level supported.
+	logger.warn(
+		`supportedLevel() | no level supported [max_frame_pixel_count:${max_frame_pixel_count}, max_fps:${max_fps}]`
+	);
+
+	return undefined;
 }
 
 /**
