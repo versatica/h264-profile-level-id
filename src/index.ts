@@ -435,8 +435,8 @@ export function parseSdpProfileLevelId(
 }
 
 /**
- * Returns true if the parameters have the same H264 profile, i.e. the same
- * H264 profile (Baseline, High, etc).
+ * Returns true if the codec parameters have the same H264 profile, i.e. the
+ * same H264 profile (Baseline, High, etc).
  */
 export function isSameProfile(params1: any = {}, params2: any = {}): boolean {
 	const profile_level_id_1 = parseSdpProfileLevelId(params1);
@@ -447,6 +447,26 @@ export function isSameProfile(params1: any = {}, params2: any = {}): boolean {
 		profile_level_id_1 &&
 			profile_level_id_2 &&
 			profile_level_id_1.profile === profile_level_id_2.profile
+	);
+}
+
+/**
+ * Returns true if the codec parameters have the same H264 profile, i.e. the
+ * same H264 profile (Baseline, High, etc) and same level.
+ */
+export function isSameProfileAndLevel(
+	params1: any = {},
+	params2: any = {}
+): boolean {
+	const profile_level_id_1 = parseSdpProfileLevelId(params1);
+	const profile_level_id_2 = parseSdpProfileLevelId(params2);
+
+	// Compare H264 profiles, but not levels.
+	return Boolean(
+		profile_level_id_1 &&
+			profile_level_id_2 &&
+			profile_level_id_1.profile === profile_level_id_2.profile &&
+			profile_level_id_1.level == profile_level_id_2.level
 	);
 }
 

@@ -6,6 +6,7 @@ import {
 	profileLevelIdToString,
 	parseSdpProfileLevelId,
 	isSameProfile,
+	isSameProfileAndLevel,
 	generateProfileLevelIdStringForAnswer,
 } from '../';
 
@@ -242,6 +243,50 @@ describe('isSameProfile()', () => {
 
 		expect(
 			isSameProfile(
+				{ 'profile-level-id': '42000a' },
+				{ 'profile-level-id': '64002a' }
+			)
+		).toBe(false);
+	});
+});
+
+describe('isSameProfileAndLevel()', () => {
+	test('same profile and level', () => {
+		expect(isSameProfileAndLevel({ foo: 'foo' }, { bar: 'bar' })).toBe(true);
+
+		expect(
+			isSameProfileAndLevel(
+				{ 'profile-level-id': '42e01f' },
+				{ 'profile-level-id': '42f01f' }
+			)
+		).toBe(true);
+
+		expect(
+			isSameProfileAndLevel(
+				{ 'profile-level-id': '42a01f' },
+				{ 'profile-level-id': '58A01F' }
+			)
+		).toBe(true);
+
+		expect(
+			isSameProfileAndLevel({ 'profile-level-id': '42e01f' }, undefined)
+		).toBe(true);
+	});
+
+	test('not same profile', () => {
+		expect(
+			isSameProfileAndLevel(undefined, { 'profile-level-id': '4d001f' })
+		).toBe(false);
+
+		expect(
+			isSameProfileAndLevel(
+				{ 'profile-level-id': '42a01f' },
+				{ 'profile-level-id': '640c1f' }
+			)
+		).toBe(false);
+
+		expect(
+			isSameProfileAndLevel(
 				{ 'profile-level-id': '42000a' },
 				{ 'profile-level-id': '64002a' }
 			)

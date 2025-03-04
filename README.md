@@ -31,6 +31,7 @@ import {
 	levelToString,
 	parseSdpProfileLevelId,
 	isSameProfile,
+	isSameProfileAndLevel,
 	generateProfileLevelIdStringForAnswer,
 } from 'h264-profile-level-id';
 ```
@@ -131,9 +132,17 @@ Parse profile level id that is represented as a string of 3 hex bytes contained 
 isSameProfile(params1: any = {}, params2: any = {}): boolean
 ```
 
-Return true if the parameters have the same H264 profile, i.e. the same H264 profile (Baseline, High, etc).
+Return true if the codec parameters have the same H264 profile, i.e. the same H264 profile (Baseline, High, etc).
 
-### Function `generateProfileLevelIdStringForAnswer()
+### Function `isSameProfileAndLevel()`
+
+```ts
+isSameProfileAndLevel(params1: any = {}, params2: any = {}): boolean
+```
+
+Return true if the codec parameters have the same H264 profile, i.e. the same H264 profile (Baseline, High, etc) and same level.
+
+### Function `generateProfileLevelIdStringForAnswer()`
 
 ```ts
 generateProfileLevelIdStringForAnswer(
