@@ -4,8 +4,8 @@
 [![][github-actions-shield-h264-profile-level-id]][github-actions-h264-profile-level-id]
 [![][opencollective-shield-mediasoup]][opencollective-mediasoup]
 
-
 TypeScript utility to process [H264](https://tools.ietf.org/html/rfc6184) `profile-level-id` values based on Google's libwebrtc C++ code:
+
 - [h264_profile_level_id.cc](https://webrtc.googlesource.com/src/+/refs/heads/main/api/video_codecs/h264_profile_level_id.cc)
 - [h264_profile_level_id.h](https://webrtc.googlesource.com/src/+/refs/heads/main/api/video_codecs/h264_profile_level_id.h)
 - [h264_profile_level_id_unittest.cc](https://webrtc.googlesource.com/src/+/refs/heads/main/api/video_codecs/test/h264_profile_level_id_unittest.cc)
@@ -18,55 +18,53 @@ $ npm install h264-profile-level-id
 
 ```ts
 import {
-  // H264 Profile enum
-  Profile,
-  // H264 Level enum
-  Level,
-  // Class.
-  ProfileLevelId,
-  // Functions.
-  parseProfileLevelId,
-  profileLevelIdToString,
-  profileToString,
-  levelToString,
-  parseSdpProfileLevelId,
-  isSameProfile,
-  generateProfileLevelIdStringForAnswer
+	// H264 Profile enum
+	Profile,
+	// H264 Level enum
+	Level,
+	// Class.
+	ProfileLevelId,
+	// Functions.
+	parseProfileLevelId,
+	profileLevelIdToString,
+	profileToString,
+	levelToString,
+	parseSdpProfileLevelId,
+	isSameProfile,
+	generateProfileLevelIdStringForAnswer,
 } from 'h264-profile-level-id';
 ```
 
 ```ts
-enum Profile
-{
-  ConstrainedBaseline = 1,
-  Baseline = 2,
-  Main = 3,
-  ConstrainedHigh = 4,
-  High = 5,
-  PredictiveHigh444 = 6
+enum Profile {
+	ConstrainedBaseline = 1,
+	Baseline = 2,
+	Main = 3,
+	ConstrainedHigh = 4,
+	High = 5,
+	PredictiveHigh444 = 6,
 }
 ```
 
 ```ts
-enum Level
-{
-  L1_b = 0,
-  L1 = 10,
-  L1_1 = 11,
-  L1_2 = 12,
-  L1_3 = 13,
-  L2 = 20,
-  L2_1 = 21,
-  L2_2 = 22,
-  L3 = 30,
-  L3_1 = 31,
-  L3_2 = 32,
-  L4 = 40,
-  L4_1 = 41,
-  L4_2 = 42,
-  L5 = 50,
-  L5_1 = 51,
-  L5_2 = 52
+enum Level {
+	L1_b = 0,
+	L1 = 10,
+	L1_1 = 11,
+	L1_2 = 12,
+	L1_3 = 13,
+	L2 = 20,
+	L2_1 = 21,
+	L2_2 = 22,
+	L3 = 30,
+	L3_1 = 31,
+	L3_2 = 32,
+	L4 = 40,
+	L4_1 = 41,
+	L4_2 = 42,
+	L5 = 50,
+	L5_1 = 51,
+	L5_2 = 52,
 }
 ```
 
@@ -77,7 +75,11 @@ Class containing both H264 profile and level.
 ```js
 const profile_level_id = new ProfileLevelId(Profile.Main, Level.L3_1);
 
-console.log('profile:%d, level:%d', profile_level_id.profile, profile_level_id.level);
+console.log(
+	'profile:%d, level:%d',
+	profile_level_id.profile,
+	profile_level_id.level
+);
 // => profile:3, level:31
 ```
 
@@ -86,7 +88,6 @@ Both `profile` and `level` members are public.
 ### function parseProfileLevelId(str: string): ProfileLevelId \| undefined
 
 Parse profile level id that is represented as a string of 3 hex bytes. Nothing will be returned if the string is not a recognized H264 profile level id.
-
 
 ### function profileLevelIdToString(profile_level_id: ProfileLevelId): string \| undefined
 
@@ -114,23 +115,17 @@ Generate a profile level id that is represented as a string of 3 hex bytes suita
 
 **NOTE:** This function is just intended to manage H264 profile levels ids with same profile (otherwise it will throw). Use `isSameProfile()` API before this one.
 
-
 ## Usage examples
 
 See the [unit tests](src/tests/test.js).
 
-
 ## Author
 
-* Iñaki Baz Castillo [[website](https://inakibaz.me)|[github](https://github.com/ibc/)]
-
+- Iñaki Baz Castillo [[website](https://inakibaz.me)|[github](https://github.com/ibc/)]
 
 ## License
 
 [ISC](./LICENSE)
-
-
-
 
 [npm-shield-h264-profile-level-id]: https://img.shields.io/npm/v/h264-profile-level-id.svg
 [npm-h264-profile-level-id]: https://npmjs.org/package/h264-profile-level-id

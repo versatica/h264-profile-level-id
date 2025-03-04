@@ -13,21 +13,29 @@ jobs:
     strategy:
       matrix:
         ci:
-          - os: ubuntu-20.04
-            node: 16
-          - os: macos-12
+          - os: ubuntu-22.04
             node: 18
-          - os: windows-2022
+          - os: ubuntu-24.04
             node: 20
+          - os: ubuntu-24.04
+            node: 22
+          - os: macos-13
+            node: 18
+          - os: macos-14
+            node: 20
+          - os: macos-15
+            node: 22
+          - os: windows-2022
+            node: 22
 
     runs-on: ${{ matrix.ci.os }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.ci.node }}
 

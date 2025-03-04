@@ -1,20 +1,36 @@
-import process from 'process';
-import os from 'os';
-import fs from 'fs';
-import { execSync } from 'child_process';
+import * as process from 'node:process';
+import * as fs from 'node:fs';
+import { execSync } from 'node:child_process';
 
 const PKG = JSON.parse(fs.readFileSync('./package.json').toString());
-const IS_WINDOWS = os.platform() === 'win32';
 const RELEASE_BRANCH = 'master';
+// Paths for ESLint to check. Converted to string for convenience.
+const ESLINT_PATHS = ['eslint.config.mjs', 'src', 'npm-scripts.mjs'].join(' ');
+// Paths for ESLint to ignore. Converted to string argument for convenience.
+const ESLINT_IGNORE_PATTERN_ARGS = []
+	.map(entry => `--ignore-pattern ${entry}`)
+	.join(' ');
+// Paths for Prettier to check/write. Converted to string for convenience.
+// NOTE: Prettier ignores paths in .gitignore so we don't need to care about
+// node/src/fbs.
+const PRETTIER_PATHS = [
+	'README.md',
+	'eslint.config.mjs',
+	'src',
+	'npm-scripts.mjs',
+	'package.json',
+	'tsconfig.json',
+].join(' ');
 
-const task = process.argv.slice(2).join(' ');
+const task = process.argv[2];
+const args = process.argv.slice(3).join(' ');
 
 run();
 
-async function run()
-{
-	switch (task)
-	{
+async function run() {
+	logInfo(args ? `[args:"${args}"]` : '');
+
+	switch (task) {
 		// As per NPM documentation (https://docs.npmjs.com/cli/v9/using-npm/scripts)
 		// `prepare` script:
 		//
@@ -25,62 +41,60 @@ async function run()
 		//   script will be run, before the package is packaged and installed.
 		//
 		// So here we compile TypeScript to JavaScript.
-		case 'prepare':
-		{
-			buildTypescript(/* force */ false);
+		case 'prepare': {
+			buildTypescript({ force: false });
 
 			break;
 		}
 
-		case 'typescript:build':
-		{
+		case 'typescript:build': {
 			installDeps();
-			buildTypescript(/* force */ true);
+			buildTypescript({ force: true });
 
 			break;
 		}
 
-		case 'typescript:watch':
-		{
+		case 'typescript:watch': {
 			deleteLib();
-			executeCmd('tsc --watch');
+			executeCmd(`tsc --watch ${args}`);
 
 			break;
 		}
 
-		case 'lint':
-		{
+		case 'lint': {
 			lint();
 
 			break;
 		}
 
-		case 'test':
-		{
-			buildTypescript(/* force */ false);
+		case 'format': {
+			format();
+
+			break;
+		}
+
+		case 'test': {
+			buildTypescript({ force: false });
 			test();
 
 			break;
 		}
 
-		case 'coverage':
-		{
-			buildTypescript(/* force */ false);
-			executeCmd('jest --coverage');
+		case 'coverage': {
+			buildTypescript({ force: false });
+			executeCmd(`jest --coverage ${args}`);
 			executeCmd('open-cli coverage/lcov-report/index.html');
 
 			break;
 		}
 
-		case 'release:check':
-		{
+		case 'release:check': {
 			checkRelease();
 
 			break;
 		}
 
-		case 'release':
-		{
+		case 'release': {
 			checkRelease();
 			executeCmd(`git commit -am '${PKG.version}'`);
 			executeCmd(`git tag -a ${PKG.version} -m '${PKG.version}'`);
@@ -91,8 +105,7 @@ async function run()
 			break;
 		}
 
-		default:
-		{
+		default: {
 			logError('unknown task');
 
 			exitWithError();
@@ -100,30 +113,18 @@ async function run()
 	}
 }
 
-function deleteLib()
-{
-	if (!fs.existsSync('lib'))
-	{
+function deleteLib() {
+	if (!fs.existsSync('lib')) {
 		return;
 	}
 
 	logInfo('deleteLib()');
 
-	if (!IS_WINDOWS)
-	{
-		executeCmd('rm -rf lib');
-	}
-	else
-	{
-		// NOTE: This command fails in Windows if the dir doesn't exist.
-		executeCmd('rmdir /s /q "lib"', /* exitOnError */ false);
-	}
+	fs.rmSync('lib', { recursive: true, force: true });
 }
 
-function buildTypescript(force = false)
-{
-	if (!force && fs.existsSync('lib'))
-	{
+function buildTypescript({ force = false } = { force: false }) {
+	if (!force && fs.existsSync('lib')) {
 		return;
 	}
 
@@ -133,22 +134,33 @@ function buildTypescript(force = false)
 	executeCmd('tsc');
 }
 
-function lint()
-{
+function lint() {
 	logInfo('lint()');
 
-	executeCmd('eslint -c .eslintrc.js --max-warnings 0 src .eslintrc.js npm-scripts.mjs');
+	// Ensure there are no rules that are unnecessary or conflict with Prettier
+	// rules.
+	executeCmd('eslint-config-prettier eslint.config.mjs');
+
+	executeCmd(
+		`eslint -c eslint.config.mjs --max-warnings 0 ${ESLINT_IGNORE_PATTERN_ARGS} ${ESLINT_PATHS}`
+	);
+
+	executeCmd(`prettier --check ${PRETTIER_PATHS}`);
 }
 
-function test()
-{
+function format() {
+	logInfo('format()');
+
+	executeCmd(`prettier --write ${PRETTIER_PATHS}`);
+}
+
+function test() {
 	logInfo('test()');
 
-	executeCmd('jest');
+	executeCmd(`jest --silent false --detectOpenHandles ${args}`);
 }
 
-function installDeps()
-{
+function installDeps() {
 	logInfo('installDeps()');
 
 	// Install/update deps.
@@ -157,59 +169,47 @@ function installDeps()
 	executeCmd('npm install --package-lock-only --ignore-scripts');
 }
 
-function checkRelease()
-{
+function checkRelease() {
 	logInfo('checkRelease()');
 
 	installDeps();
-	buildTypescript(/* force */ true);
+	buildTypescript({ force: true });
 	lint();
 	test();
 }
 
-function executeCmd(command, exitOnError = true)
-{
+function executeCmd(command, exitOnError = true) {
 	logInfo(`executeCmd(): ${command}`);
 
-	try
-	{
-		execSync(command, { stdio: [ 'ignore', process.stdout, process.stderr ] });
-	}
-	catch (error)
-	{
-		if (exitOnError)
-		{
+	try {
+		execSync(command, { stdio: ['ignore', process.stdout, process.stderr] });
+	} catch (error) {
+		if (exitOnError) {
 			logError(`executeCmd() failed, exiting: ${error}`);
 
 			exitWithError();
-		}
-		else
-		{
+		} else {
 			logInfo(`executeCmd() failed, ignoring: ${error}`);
 		}
 	}
 }
 
-function logInfo(message)
-{
+function logInfo(message) {
 	// eslint-disable-next-line no-console
-	console.log(`npm-scripts \x1b[36m[INFO] [${task}]\x1b\[0m`, message);
+	console.log(`npm-scripts \x1b[36m[INFO] [${task}]\x1b[0m`, message);
 }
 
 // eslint-disable-next-line no-unused-vars
-function logWarn(message)
-{
+function logWarn(message) {
 	// eslint-disable-next-line no-console
-	console.warn(`npm-scripts \x1b[33m[WARN] [${task}]\x1b\[0m`, message);
+	console.warn(`npm-scripts \x1b[33m[WARN] [${task}]\x1b[0m`, message);
 }
 
-function logError(message)
-{
+function logError(message) {
 	// eslint-disable-next-line no-console
-	console.error(`npm-scripts \x1b[31m[ERROR] [${task}]\x1b\[0m`, message);
+	console.error(`npm-scripts \x1b[31m[ERROR] [${task}]\x1b[0m`, message);
 }
 
-function exitWithError()
-{
+function exitWithError() {
 	process.exit(1);
 }
