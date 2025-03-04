@@ -1,6 +1,6 @@
 {
 	"name": "h264-profile-level-id",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"description": "TypeScript utility to process H264 profile-level-id values",
 	"author": "Iñaki Baz Castillo <ibc@aliax.net> (https://inakibaz.me)",
 	"license": "ISC",
@@ -67,7 +67,7 @@
 	"devDependencies": {
 		"@eslint/js": "^9.21.0",
 		"@types/debug": "^4.1.12",
-		"@types/jest": "^29.5.11",
+		"@types/jest": "^29.5.14",
 		"@typescript-eslint/eslint-plugin": "^8.26.0",
 		"@typescript-eslint/parser": "^8.26.0",
 		"eslint": "^9.21.0",
