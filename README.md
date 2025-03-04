@@ -85,7 +85,7 @@ console.log(
 
 Both `profile` and `level` members are public.
 
-### Function `parseProfileLevelId()'
+### Function `parseProfileLevelId()`
 
 ```ts
 parseProfileLevelId(str: string): ProfileLevelId | undefined
@@ -152,7 +152,7 @@ See the [unit tests](src/tests/test.ts).
 
 ## Author
 
-- Iñaki Baz Castillo [[website](https://inakibaz.me) | [github](https://github.com/ibc/)]
+Iñaki Baz Castillo [[website](https://inakibaz.me)|[github](https://github.com/ibc/)]
 
 ## License
 
