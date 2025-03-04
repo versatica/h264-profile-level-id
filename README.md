@@ -68,7 +68,7 @@ enum Level {
 }
 ```
 
-### class ProfileLevelId
+### Class `ProfileLevelId`
 
 Class containing both H264 profile and level.
 
@@ -85,31 +85,62 @@ console.log(
 
 Both `profile` and `level` members are public.
 
-### function parseProfileLevelId(str: string): ProfileLevelId \| undefined
+### Function `parseProfileLevelId()'
+
+```ts
+parseProfileLevelId(str: string): ProfileLevelId | undefined
+```
 
 Parse profile level id that is represented as a string of 3 hex bytes. Nothing will be returned if the string is not a recognized H264 profile level id.
 
-### function profileLevelIdToString(profile_level_id: ProfileLevelId): string \| undefined
+### Function `profileLevelIdToString()`
+
+```ts
+profileLevelIdToString(profile_level_id: ProfileLevelId): string | undefined
+```
 
 Return canonical string representation as three hex bytes of the profile level id, or returns nothing for invalid profile level ids.
 
-### function profileToString(profile: Profile): string \| undefined
+### Function `profileToString()`
+
+```ts
+profileToString(profile: Profile): string | undefined
+```
 
 Return a human friendly name for the given profile.
 
-### function levelToString(level: Level): string \| undefined
+### Function `levelToString()`
+
+```ts
+levelToString(level: Level): string | undefined
+```
 
 Return a human friendly name for the given level.
 
-### function parseSdpProfileLevelId(params: any = {}): ProfileLevelId \ undefined
+### Function `parseSdpProfileLevelId()`
+
+```ts
+parseSdpProfileLevelId(params: any = {}): ProfileLevelId | undefined
+```
 
 Parse profile level id that is represented as a string of 3 hex bytes contained in an SDP key-value map. A default profile level id will be returned if the `profile-level-id` key is missing. Nothing will be returned if the key is present but the string is invalid.
 
-### function isSameProfile(params1: any = {}, params2: any = {}): boolean
+### Function `isSameProfile()`
+
+```ts
+isSameProfile(params1: any = {}, params2: any = {}): boolean
+```
 
 Return true if the parameters have the same H264 profile, i.e. the same H264 profile (Baseline, High, etc).
 
-### function generateProfileLevelIdForAnswer(local_supported_params: any = {}, remote_offered_params: any = {}): string \| undefined
+### Function `generateProfileLevelIdStringForAnswer()
+
+```ts
+generateProfileLevelIdStringForAnswer(
+	local_supported_params: any = {},
+	remote_offered_params: any = {}
+): string | undefined
+```
 
 Generate a profile level id that is represented as a string of 3 hex bytes suitable for an answer in an SDP negotiation based on local supported parameters and remote offered parameters. The parameters that are used when negotiating are the level part of `profile-level-id` and `level-asymmetry-allowed`.
 
@@ -121,7 +152,7 @@ See the [unit tests](src/tests/test.ts).
 
 ## Author
 
-- Iñaki Baz Castillo [[website](https://inakibaz.me)|[github](https://github.com/ibc/)]
+- Iñaki Baz Castillo [[website](https://inakibaz.me) | [github](https://github.com/ibc/)]
 
 ## License
 
