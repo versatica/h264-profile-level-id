@@ -33,6 +33,7 @@ import {
 	isSameProfile,
 	isSameProfileAndLevel,
 	generateProfileLevelIdStringForAnswer,
+	supportedLevel,
 } from 'h264-profile-level-id';
 ```
 
@@ -154,6 +155,17 @@ generateProfileLevelIdStringForAnswer(
 Generate a profile level id that is represented as a string of 3 hex bytes suitable for an answer in an SDP negotiation based on local supported parameters and remote offered parameters. The parameters that are used when negotiating are the level part of `profile-level-id` and `level-asymmetry-allowed`.
 
 **NOTE:** This function is just intended to manage H264 profile levels ids with same profile (otherwise it will throw). Use `isSameProfile()` API before this one.
+
+### Function `supportedLevel()`
+
+```ts
+supportedLevel(
+	max_frame_pixel_count: number,
+	max_fps: number
+): Level | undefined
+```
+
+Given that a decoder supports up to a given frame size (in pixels) at up to a given number of frames per second, return the highest H264 level where it can guarantee that it will be able to support all valid encoded streams that are within that level.
 
 ## Usage examples
 
