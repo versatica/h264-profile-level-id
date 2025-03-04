@@ -117,7 +117,7 @@ Generate a profile level id that is represented as a string of 3 hex bytes suita
 
 ## Usage examples
 
-See the [unit tests](src/tests/test.js).
+See the [unit tests](src/tests/test.ts).
 
 ## Author
 
