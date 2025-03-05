@@ -1,6 +1,6 @@
 name: h264-profile-level-id
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 concurrency:
   # Cancel a currently running workflow from the same PR, branch or tag when a
