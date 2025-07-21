@@ -215,6 +215,7 @@ function logInfo(...args) {
 	console.log(`npm-scripts.mjs \x1b[36m[INFO] [${task}]\x1b[0m`, ...args);
 }
 
+// eslint-disable-next-line no-unused-vars
 function logWarn(...args) {
 	// eslint-disable-next-line no-console
 	console.warn(`npm-scripts.mjs \x1b[33m[WARN] [${task}]\x1b\0m`, ...args);
