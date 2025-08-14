@@ -1,6 +1,6 @@
 {
 	"name": "h264-profile-level-id",
-	"version": "2.2.2",
+	"version": "2.2.3",
 	"description": "TypeScript utility to process H264 profile-level-id values",
 	"author": "Iñaki Baz Castillo <ibc@aliax.net> (https://inakibaz.me)",
 	"license": "ISC",
