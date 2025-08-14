@@ -4,22 +4,29 @@ import { execSync } from 'node:child_process';
 import pkg from './package.json' with { type: 'json' };
 
 const RELEASE_BRANCH = 'master';
+
 // Paths for ESLint to check. Converted to string for convenience.
-const ESLINT_PATHS = ['eslint.config.mjs', 'src', 'npm-scripts.mjs'].join(' ');
+const ESLINT_PATHS = [
+	'eslint.config.mjs',
+	'jest.config.mjs',
+	'npm-scripts.mjs',
+	'src',
+].join(' ');
+
 // Paths for ESLint to ignore. Converted to string argument for convenience.
 const ESLINT_IGNORE_PATTERN_ARGS = []
 	.map(entry => `--ignore-pattern ${entry}`)
 	.join(' ');
+
 // Paths for Prettier to check/write. Converted to string for convenience.
-// NOTE: Prettier ignores paths in .gitignore so we don't need to care about
-// node/src/fbs.
 const PRETTIER_PATHS = [
 	'README.md',
 	'eslint.config.mjs',
-	'src',
+	'jest.config.mjs',
 	'npm-scripts.mjs',
 	'package.json',
 	'tsconfig.json',
+	'src',
 ].join(' ');
 
 const task = process.argv[2];
@@ -48,15 +55,13 @@ async function run() {
 		}
 
 		case 'typescript:build': {
-			installDeps();
 			buildTypescript({ force: true });
 
 			break;
 		}
 
 		case 'typescript:watch': {
-			deleteLib();
-			executeCmd(`tsc --watch ${taskArgs}`);
+			watchTypescript();
 
 			break;
 		}
@@ -74,14 +79,12 @@ async function run() {
 		}
 
 		case 'test': {
-			buildTypescript({ force: false });
 			test();
 
 			break;
 		}
 
 		case 'coverage': {
-			buildTypescript({ force: false });
 			executeCmd(`jest --coverage ${taskArgs}`);
 			executeCmd('open-cli coverage/lcov-report/index.html');
 
@@ -123,7 +126,7 @@ function deleteLib() {
 	fs.rmSync('lib', { recursive: true, force: true });
 }
 
-function buildTypescript({ force = false } = { force: false }) {
+function buildTypescript({ force }) {
 	if (!force && fs.existsSync('lib')) {
 		return;
 	}
@@ -131,7 +134,17 @@ function buildTypescript({ force = false } = { force: false }) {
 	logInfo('buildTypescript()');
 
 	deleteLib();
-	executeCmd('tsc');
+
+	// Generate .js CommonJS code and .d.ts TypeScript declaration files in lib/.
+	executeCmd(`tsc ${taskArgs}`);
+}
+
+function watchTypescript() {
+	logInfo('watchTypescript()');
+
+	deleteLib();
+
+	executeCmd(`tsc --watch ${taskArgs}`);
 }
 
 function lint() {
@@ -182,19 +195,15 @@ function checkRelease() {
 	test();
 }
 
-function executeCmd(command, exitOnError = true) {
+function executeCmd(command) {
 	logInfo(`executeCmd(): ${command}`);
 
 	try {
 		execSync(command, { stdio: ['ignore', process.stdout, process.stderr] });
 	} catch (error) {
-		if (exitOnError) {
-			logError(`executeCmd() failed, exiting: ${error}`);
+		logError(`executeCmd() failed, exiting: ${error}`);
 
-			exitWithError();
-		} else {
-			logInfo(`executeCmd() failed, ignoring: ${error}`);
-		}
+		exitWithError();
 	}
 }
 

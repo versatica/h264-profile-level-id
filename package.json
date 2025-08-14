@@ -39,28 +39,6 @@
 		"release:check": "node npm-scripts.mjs release:check",
 		"release": "node npm-scripts.mjs release"
 	},
-	"jest": {
-		"verbose": true,
-		"testEnvironment": "node",
-		"testRegex": "src/tests/test.*\\.ts",
-		"transform": {
-			"^.*\\.ts$": [
-				"ts-jest",
-				{
-					"diagnostics": {
-						"ignoreCodes": [
-							"TS151001"
-						]
-					}
-				}
-			]
-		},
-		"coveragePathIgnorePatterns": [
-			"src/tests",
-			"src/Logger"
-		],
-		"cacheDirectory": ".cache/jest"
-	},
 	"dependencies": {
 		"debug": "^4.4.1"
 	},
