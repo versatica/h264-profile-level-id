@@ -1,8 +1,8 @@
 import * as process from 'node:process';
 import * as fs from 'node:fs';
 import { execSync } from 'node:child_process';
+import pkg from './package.json' with { type: 'json' };
 
-const PKG = JSON.parse(fs.readFileSync('./package.json').toString());
 const RELEASE_BRANCH = 'master';
 // Paths for ESLint to check. Converted to string for convenience.
 const ESLINT_PATHS = ['eslint.config.mjs', 'src', 'npm-scripts.mjs'].join(' ');
@@ -96,10 +96,10 @@ async function run() {
 
 		case 'release': {
 			checkRelease();
-			executeCmd(`git commit -am '${PKG.version}'`);
-			executeCmd(`git tag -a ${PKG.version} -m '${PKG.version}'`);
+			executeCmd(`git commit -am '${pkg.version}'`);
+			executeCmd(`git tag -a ${pkg.version} -m '${pkg.version}'`);
 			executeCmd(`git push origin ${RELEASE_BRANCH}`);
-			executeCmd(`git push origin '${PKG.version}'`);
+			executeCmd(`git push origin '${pkg.version}'`);
 			executeInteractiveCmd('npm publish');
 
 			break;
