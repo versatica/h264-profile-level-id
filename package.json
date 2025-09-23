@@ -19,7 +19,7 @@
 		"lib"
 	],
 	"engines": {
-		"node": ">=18"
+		"node": ">=20"
 	},
 	"keywords": [
 		"webrtc",
@@ -56,6 +56,6 @@
 		"prettier": "^3.6.2",
 		"ts-jest": "^29.4.4",
 		"typescript": "^5.9.2",
-		"typescript-eslint": "^8.44.0"
+		"typescript-eslint": "^8.44.1"
 	}
 }
