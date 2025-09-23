@@ -659,7 +659,7 @@ export function supportedLevel(
 	const PixelsPerMacroblock = 16 * 16;
 
 	for (let i = LevelConstraints.length - 1; i >= 0; --i) {
-		const level_constraint: LevelConstraint = LevelConstraints[i];
+		const level_constraint: LevelConstraint = LevelConstraints[i]!;
 
 		if (
 			level_constraint.max_macroblock_frame_size * PixelsPerMacroblock <=
