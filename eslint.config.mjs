@@ -123,7 +123,6 @@ const config = tsEslint.config(
 		files: ['src/**/*.ts'],
 		languageOptions: {
 			parserOptions: {
-				projectService: true,
 				project: 'tsconfig.json',
 			},
 		},
