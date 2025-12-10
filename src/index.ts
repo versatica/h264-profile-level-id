@@ -544,8 +544,8 @@ export function isSameProfile(params1: any = {}, params2: any = {}): boolean {
 	// Compare H264 profiles, but not levels.
 	return Boolean(
 		profile_level_id_1 &&
-			profile_level_id_2 &&
-			profile_level_id_1.profile === profile_level_id_2.profile
+		profile_level_id_2 &&
+		profile_level_id_1.profile === profile_level_id_2.profile
 	);
 }
 
@@ -563,9 +563,9 @@ export function isSameProfileAndLevel(
 	// Compare H264 profiles, but not levels.
 	return Boolean(
 		profile_level_id_1 &&
-			profile_level_id_2 &&
-			profile_level_id_1.profile === profile_level_id_2.profile &&
-			profile_level_id_1.level == profile_level_id_2.level
+		profile_level_id_2 &&
+		profile_level_id_1.profile === profile_level_id_2.profile &&
+		profile_level_id_1.level == profile_level_id_2.level
 	);
 }
 

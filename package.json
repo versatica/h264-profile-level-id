@@ -1,6 +1,6 @@
 {
 	"name": "h264-profile-level-id",
-	"version": "2.3.1",
+	"version": "2.3.2",
 	"description": "TypeScript utility to process H264 profile-level-id values",
 	"author": "Iñaki Baz Castillo <ibc@aliax.net> (https://inakibaz.me)",
 	"license": "ISC",
@@ -53,9 +53,9 @@
 		"globals": "^16.5.0",
 		"jest": "^30.2.0",
 		"open-cli": "^8.0.0",
-		"prettier": "^3.6.2",
-		"ts-jest": "^29.4.5",
+		"prettier": "^3.7.4",
+		"ts-jest": "^29.4.6",
 		"typescript": "^5.9.3",
-		"typescript-eslint": "^8.48.0"
+		"typescript-eslint": "^8.49.0"
 	}
 }
