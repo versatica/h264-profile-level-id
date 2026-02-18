@@ -181,7 +181,7 @@ Iñaki Baz Castillo [[website](https://inakibaz.me)|[github](https://github.com/
 
 [npm-shield-h264-profile-level-id]: https://img.shields.io/npm/v/h264-profile-level-id.svg
 [npm-h264-profile-level-id]: https://npmjs.org/package/h264-profile-level-id
-[github-actions-shield-h264-profile-level-id]: https://github.com/versatica/h264-profile-level-id/actions/workflows/h264-profile-level-id.yaml/badge.svg
-[github-actions-h264-profile-level-id]: https://github.com/versatica/h264-profile-level-id/actions/workflows/h264-profile-level-id.yaml
+[github-actions-shield-h264-profile-level-id]: https://github.com/versatica/h264-profile-level-id/actions/workflows/h264-profile-level-id.yaml/badge.svg?branch=master
+[github-actions-h264-profile-level-id]: https://github.com/versatica/h264-profile-level-id/actions/workflows/h264-profile-level-id.yaml?query=branch%3Amaster
 [opencollective-shield-mediasoup]: https://img.shields.io/opencollective/all/mediasoup.svg
 [opencollective-mediasoup]: https://opencollective.com/mediasoup/
