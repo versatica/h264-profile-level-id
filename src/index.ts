@@ -244,7 +244,7 @@ export function parseProfileLevelId(str: string): ProfileLevelId | undefined {
 	}
 
 	// Separate into three bytes.
-	const level_idc = (profile_level_id_numeric & 0xff) as Level;
+	const level_idc: Level = profile_level_id_numeric & 0xff;
 	const profile_iop = (profile_level_id_numeric >> 8) & 0xff;
 	const profile_idc = (profile_level_id_numeric >> 16) & 0xff;
 
