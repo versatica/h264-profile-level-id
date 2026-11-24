@@ -18,55 +18,55 @@ npm install h264-profile-level-id
 
 ```ts
 import {
-	// H264 Profile enum
-	Profile,
-	// H264 Level enum
-	Level,
-	// Class.
-	ProfileLevelId,
-	// Functions.
-	parseProfileLevelId,
-	profileLevelIdToString,
-	profileToString,
-	levelToString,
-	parseSdpProfileLevelId,
-	isSameProfile,
-	isSameProfileAndLevel,
-	generateProfileLevelIdStringForAnswer,
-	supportedLevel,
+  // H264 Profile enum
+  Profile,
+  // H264 Level enum
+  Level,
+  // Class.
+  ProfileLevelId,
+  // Functions.
+  parseProfileLevelId,
+  profileLevelIdToString,
+  profileToString,
+  levelToString,
+  parseSdpProfileLevelId,
+  isSameProfile,
+  isSameProfileAndLevel,
+  generateProfileLevelIdStringForAnswer,
+  supportedLevel,
 } from 'h264-profile-level-id';
 ```
 
 ```ts
 enum Profile {
-	ConstrainedBaseline = 1,
-	Baseline = 2,
-	Main = 3,
-	ConstrainedHigh = 4,
-	High = 5,
-	PredictiveHigh444 = 6,
+  ConstrainedBaseline = 1,
+  Baseline = 2,
+  Main = 3,
+  ConstrainedHigh = 4,
+  High = 5,
+  PredictiveHigh444 = 6,
 }
 ```
 
 ```ts
 enum Level {
-	L1_b = 0,
-	L1 = 10,
-	L1_1 = 11,
-	L1_2 = 12,
-	L1_3 = 13,
-	L2 = 20,
-	L2_1 = 21,
-	L2_2 = 22,
-	L3 = 30,
-	L3_1 = 31,
-	L3_2 = 32,
-	L4 = 40,
-	L4_1 = 41,
-	L4_2 = 42,
-	L5 = 50,
-	L5_1 = 51,
-	L5_2 = 52,
+  L1_b = 0,
+  L1 = 10,
+  L1_1 = 11,
+  L1_2 = 12,
+  L1_3 = 13,
+  L2 = 20,
+  L2_1 = 21,
+  L2_2 = 22,
+  L3 = 30,
+  L3_1 = 31,
+  L3_2 = 32,
+  L4 = 40,
+  L4_1 = 41,
+  L4_2 = 42,
+  L5 = 50,
+  L5_1 = 51,
+  L5_2 = 52,
 }
 ```
 
@@ -78,9 +78,9 @@ Class containing both H264 profile and level.
 const profile_level_id = new ProfileLevelId(Profile.Main, Level.L3_1);
 
 console.log(
-	'profile:%d, level:%d',
-	profile_level_id.profile,
-	profile_level_id.level
+  'profile:%d, level:%d',
+  profile_level_id.profile,
+  profile_level_id.level
 );
 // => profile:3, level:31
 ```
